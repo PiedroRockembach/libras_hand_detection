@@ -1,0 +1,22 @@
+# LIBRAS-UFOP
+
+- **Referência:** Cerna, L. R.; Cardenas, E. E.; Miranda, D. G.; Menotti, D.; Camara-Chavez, G. *A multimodal LIBRAS-UFOP Brazilian sign language dataset of minimal pairs using a microsoft Kinect sensor*. Expert Systems with Applications, 167:114179, 2021. DOI: [10.1016/j.eswa.2020.114179](https://doi.org/10.1016/j.eswa.2020.114179) (metadados via [Crossref](https://api.crossref.org/works/10.1016/j.eswa.2020.114179)). Registro de dados: [Zenodo 23350484](https://zenodo.org/records/23350484).
+- **Licença / termos de uso:** o registro Zenodo declara **CC BY 4.0**, mas os arquivos são **restritos** e só são liberados após assinatura de um *LIBRAS-UFOP Dataset Usage Agreement* ([Zenodo](https://zenodo.org/records/23350484)). Os termos do acordo (uso não comercial, redistribuição) estão num documento externo que **não foi lido: a verificar**.
+- **Como obter:** preencher e assinar o *Dataset Usage Agreement* ([Google Docs, link no Zenodo](https://docs.google.com/document/d/1AkoTPo8QFh2U-7PWdOJyKP8tLM4PF9u2/edit)) e enviar a qualquer um destes endereços: edu.escobedo88@gmail.com, eescobed@ulima.edu.pe, lramirec@ulima.edu.pe ([Zenodo](https://zenodo.org/records/23350484)). O pedido é feito pelo Zenodo, com login.
+- **Conteúdo:**
+  - **Sinais:** 56 classes em 4 categorias de **pares mínimos**: C1 = mesmo movimento e ponto de articulação, configuração de mão diferente; C2 = movimento diferente; C3 = ponto de articulação diferente; C4 = expressões faciais com movimentos parecidos ([Zenodo](https://zenodo.org/records/23350484)).
+  - **Sinalizadores:** 5 (3 mulheres, 2 homens) ([Zenodo](https://zenodo.org/records/23350484)).
+  - **Repetições:** variável. Fontes secundárias citam "8–16 repetições por sinal por sinalizador" ([arXiv:2510.24887](https://arxiv.org/html/2510.24887v4)) e "aproximadamente 10,86" ([SBrT 2021](https://biblioteca.sbrt.org.br/articlefile/2860.pdf)). **A verificar** no artigo original.
+  - **Total:** 3.040 sequências ([Zenodo](https://zenodo.org/records/23350484)).
+  - **Modalidades:** Kinect v1, 30 fps, RGB + profundidade + juntas 3D do esqueleto ([Zenodo](https://zenodo.org/records/23350484)). A versão processada do Zenodo traz vídeo segmentado e arquivos de esqueleto. Resolução de 640×480 segundo [arXiv:2510.24887](https://arxiv.org/html/2510.24887v4) (fonte secundária, **a verificar**).
+  - **Landmarks MediaPipe pré-computados:** não oficiais. Existe derivado de terceiros (MediaPipe Holistic, MIT) em [danielelvs/multilingual-islr-mediapipe](https://huggingface.co/datasets/danielelvs/multilingual-islr-mediapipe).
+- **Protocolo oficial de avaliação:** o Zenodo não traz divisão explícita. Remete ao artigo e afirma que o dataset é adequado para "signer-independent model evaluation" ([Zenodo](https://zenodo.org/records/23350484)). A tabela de [arXiv:2510.24887](https://arxiv.org/html/2510.24887v4) marca o resultado original de Cerna et al. como LOPO. **Protocolo do artigo original a verificar.**
+- **Resultados de referência na literatura:**
+  - Cerna et al. (2021): 74,25% com imagens dinâmicas multimodais (RGB-D + esqueleto + face) e CNNs, e 61,25% só com RGB ([Zenodo](https://zenodo.org/records/23350484); [SBrT 2021](https://biblioteca.sbrt.org.br/articlefile/2860.pdf)).
+  - dos Santos et al. (2026): **0,91 ± 0,04** de acurácia com subconjunto de landmarks MediaPipe, em **LOPO aninhado** (independente de sinalizador) ([arXiv:2510.24887](https://arxiv.org/html/2510.24887v4)). A mesma tabela cita Alves et al. (2024) com 0,82 ± 0,04 (LOPO) e Naz et al. (2025) com 0,89 ± 0,04. O próprio artigo é inconsistente sobre se Naz et al. usou LOPO.
+- **Status no projeto:** candidato.
+- **Observações:**
+  - O desenho por pares mínimos é valioso para a hipótese de **decomposição fonológica** do ADR-0001: as categorias isolam configuração de mão, movimento, ponto de articulação e expressão facial.
+  - Com só 5 sinalizadores, o LOSO tem apenas 5 dobras e alta variância.
+  - O Kinect v1 tem resolução baixa, o que pode prejudicar a detecção das mãos pelo MediaPipe. Medir na Fase 2.
+  - **Risco de licença:** o derivado no Hugging Face redistribui landmarks sob MIT, mas o original exige acordo assinado. Não usar o derivado sem confirmar que o acordo permite.

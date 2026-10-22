@@ -1,0 +1,32 @@
+# Skeleton Aware Multi-modal Sign Language Recognition (SAM-SLR)
+
+- **Referência:** Songyao Jiang, Bin Sun, Lichen Wang, Yue Bai, Kunpeng Li, Yun Fu. CVPR Workshops (ChaLearn LAP), 2021, pp. 3413-3423. arXiv: https://arxiv.org/abs/2103.08833 · CVF: https://openaccess.thecvf.com/content/CVPR2021W/ChaLearn/html/Jiang_Skeleton_Aware_Multi-Modal_Sign_Language_Recognition_CVPRW_2021_paper.html . Versão estendida (SAM-SLR-v2): "Sign Language Recognition via Skeleton-Aware Multi-Model Ensemble", https://arxiv.org/abs/2110.06161
+- **Código:** https://github.com/jackyjsy/CVPR21Chal-SLR (PyTorch 1.7). Licença ambígua: a barra lateral indica CC0-1.0, mas o README restringe a uso acadêmico, proíbe uso comercial, e o badge aponta para CC BY-NC-SA 4.0. Esqueletos do AUTSL já processados e modelos pré-treinados estão disponíveis.
+- **Problema:** Reconhecimento de sinais isolados (ISLR) independente de sinalizador, em larga escala (desafio ChaLearn LAP 2021, AUTSL).
+- **Método:**
+  - Pose 2D de corpo inteiro com HRNet (MMPose, 133 pontos), reduzida a um grafo de **27 nós**: 10 por mão e 7 do tronco superior.
+  - **SL-GCN:** convolução espacial desacoplada, módulo de atenção STC (espacial, temporal e de canal), DropGraph e 10 blocos GCN.
+  - Quatro fluxos: *joint*, *bone*, *joint motion* e *bone motion*.
+  - **SSTCN:** convolução separável sobre *features* do esqueleto.
+  - As modalidades RGB, fluxo óptico e profundidade (HHA) são combinadas por *ensemble* tardio.
+- **Dados e protocolo:**
+  - AUTSL (língua de sinais turca): 226 sinais e 43 sinalizadores, gravados com Kinect V2.
+  - Divisão do desafio: 31 sinalizadores no treino (28.142 amostras), 5 na validação (4.418) e 7 no teste (3.742). Os sinalizadores são disjuntos entre as partições, portanto o protocolo é **independente de sinalizador**.
+- **Resultados principais** (top-1, AUTSL; fonte: arXiv 2103.08833):
+  - Na **validação**, só esqueleto:
+    - fluxos isolados: *joint* 95,02%, *bone* 94,70%, *joint motion* 93,01%, *bone motion* 92,49%;
+    - SL-GCN multi-fluxo: 95,45%;
+    - SL-GCN + SSTCN: 96,11%.
+  - Na **validação**, outras modalidades: RGB 94,77%, profundidade HHA 95,13%.
+  - Na **validação**, *ensembles*: RGB completo 96,96%, RGB-D completo 97,10%.
+  - No **teste** (após ajuste fino com a validação): RGB 98,42% e RGB-D 98,53%. Foi o 1º lugar nas duas trilhas.
+- **Relevância para este projeto:**
+  - Referência principal para a Fase 4 (SL-GCN).
+  - A seleção de 27 pontos (mãos + tronco) é um bom ponto de partida para o grafo.
+  - Os fluxos *bone* e *motion* são *features* derivadas baratas que dá para testar também em GRU/transformer.
+  - Mostra que só o esqueleto já chega a cerca de 96% de validação no AUTSL; RGB e profundidade acrescentam cerca de 1 ponto.
+- **Limitações / críticas:**
+  - Usa HRNet, não MediaPipe. Moryossef et al. (2021) e OpenHands indicam que a qualidade do estimador muda bastante o resultado.
+  - O *ensemble* multimodal é caro, inviável para tempo real.
+  - O AUTSL tem muitos sinalizadores e muitas amostras por sinal, um cenário mais rico que o da Libras.
+  - A licença do código é ambígua.

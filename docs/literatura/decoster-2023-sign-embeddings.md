@@ -1,0 +1,39 @@
+# Towards the extraction of robust sign embeddings for low resource sign language recognition
+
+- **Referência:** Mathieu De Coster, Ellen Rushe, Ruth Holmes, Anthony Ventresque, Joni Dambre. arXiv 2306.17558 (2023); venue revisado a verificar. https://arxiv.org/abs/2306.17558
+- **Código:** não citado na versão consultada (a verificar).
+- **Problema:** ISLR com pouco dado e vídeo de corpus contínuo (coarticulação, distribuição de cauda longa). Os autores comparam estimadores de pose e estudam normalização, imputação e *embeddings* de pose.
+- **Método:**
+  - Pose Transformer Network (PTN) com **SignPose2Vec**: *embedding* de pose por quadro (128 dimensões, 4 blocos densos, regularização L1 na entrada e projeção linear residual).
+  - Estimadores comparados: OpenPose (54 pontos 2D), MMPose (53 pontos 2D) e MediaPipe Holistic (67 pontos 3D, sem malha facial).
+  - **Normalização:**
+    - corpo centrado no peito e escalado pela distância entre ombros;
+    - cada mão centrada no punho e escalada pela distância punho–nó do dedo médio.
+  - **Imputação:**
+    - interpolação linear entre quadros vizinhos;
+    - extrapolação nas bordas copiando o quadro válido mais próximo;
+    - zeros para partes nunca detectadas;
+    - no MediaPipe, por parte do corpo ou mão.
+  - Baseline RGB: VTN.
+- **Dados e protocolo:**
+  - Corpus VGT (língua de sinais flamenga): 24.968 exemplos e 292 glosas.
+  - Divisão **agrupada por sinalizador**: 88 sinalizadores no treino, 12 na validação e 11 no teste. É **independente de sinalizador**.
+  - Transferência a partir do corpus NGT (68.854 amostras, 458 classes).
+- **Resultados principais** (fonte: arXiv 2306.17558):
+  - Teste com PTN: **MediaPipe 45,70%** (2D) e 45,26% (3D); MMPose 36,00%; OpenPose 35,86%.
+  - **VTN (RGB): 38,93%**, abaixo do melhor modelo de pose.
+  - Velocidade: MediaPipe a cerca de 4,8 FPS, MMPose a 1,3 e OpenPose a 1,1.
+  - Ablação de **normalização**: sem ela, a validação do MMPose cai de 36,49% para 21,47%. Os autores chamam a normalização de "crucial".
+  - Ablação de **imputação** no MediaPipe: validação de 48,15% com imputação contra 47,08% sem ela (efeito pequeno).
+  - Transferência NGT → VGT: +1,15 ponto no PTN.
+- **Relevância para este projeto:**
+  - Um dos poucos estudos que isolam **normalização** e **imputação** em ISLR sobre landmarks, com protocolo independente de sinalizador.
+  - Recomendações diretas para o ADR-0002:
+    - normalizar o corpo por ombros e cada mão localmente (como no SPOTER);
+    - a imputação ajuda pouco no MediaPipe aqui, mas muito em dos Santos 2025 (Libras). Vale testar no nosso caso.
+  - Mais uma evidência de que o MediaPipe supera OpenPose e MMPose e de que a pose supera RGB em regime de poucos dados.
+- **Limitações / críticas:**
+  - Preprint.
+  - Não estuda aumentos de dados.
+  - Acurácias absolutas baixas (corpus contínuo e difícil).
+  - A interpolação linear produz poses implausíveis em lacunas longas.

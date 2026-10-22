@@ -1,0 +1,10 @@
+# AUTSL (Língua de Sinais Turca)
+
+- **Referência:** Sincan, O. M.; Keles, H. Y. *AUTSL: A Large Scale Multi-modal Turkish Sign Language Dataset and Baseline Methods*. IEEE Access, 8:181340–181355, 2020. DOI [10.1109/ACCESS.2020.3028072](https://doi.org/10.1109/ACCESS.2020.3028072) ([arXiv:2008.00932](https://arxiv.org/abs/2008.00932)). Página: [cvml.ankara.edu.tr/datasets](https://cvml.ankara.edu.tr/datasets/).
+- **Licença / termos de uso:** "criado e liberado apenas para fins acadêmicos e de pesquisa", sem uso comercial. Não há licença nomeada ([cvml.ankara.edu.tr](https://cvml.ankara.edu.tr/datasets/)).
+- **Como obter:** hospedado pelo desafio ChaLearn LAP 2021. Há uma amostra no site do laboratório ([cvml.ankara.edu.tr](https://cvml.ankara.edu.tr/datasets/)). Se exige registro ou senha: **a verificar.**
+- **Conteúdo:** 226 sinais, **43 sinalizadores**, **38.336 vídeos**. Kinect v2 com RGB, profundidade e esqueleto (25 juntas). RGB e profundidade recortados para 512×512. Fundos internos e externos variados ([cvml.ankara.edu.tr](https://cvml.ankara.edu.tr/datasets/); [arXiv:2008.00932](https://arxiv.org/abs/2008.00932)). fps: **a verificar.** Sem landmarks MediaPipe oficiais.
+- **Protocolo oficial de avaliação:** **independente de sinalizador**, com teste de 6 sinalizadores ausentes do treino e da validação ([cvml.ankara.edu.tr](https://cvml.ankara.edu.tr/datasets/)).
+- **Resultados de referência na literatura:** *baseline* original: 62,02% no teste independente de usuário, contra até 95,95% com divisão aleatória ([arXiv:2008.00932](https://arxiv.org/abs/2008.00932)). Vencedor do desafio CVPR 2021 "Large Scale Signer Independent Isolated SLR": 98,42% (RGB) e 98,53% (RGB-D) ([Jiang et al., arXiv:2103.08833](https://arxiv.org/abs/2103.08833)). Que o desafio usou o AUTSL é afirmado pela página do laboratório ([cvml.ankara.edu.tr](https://cvml.ankara.edu.tr/datasets/)).
+- **Status no projeto:** candidato (pré-treino / comparação).
+- **Observações:** a diferença de 62% (independente) para 96% (aleatória) no artigo original ilustra diretamente o ADR-0004. Tem muitas amostras por classe (~170), útil para pré-treino de modelos temporais.

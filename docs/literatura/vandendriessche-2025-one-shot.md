@@ -1,0 +1,31 @@
+# Representing Signs as Signs: One-Shot ISLR to Facilitate Functional Sign Language Technologies
+
+- **Referência:** Toon Vandendriessche, Mathieu De Coster, Annelies Lejon, Joni Dambre (IDLab-AIRO, Ghent University – imec). Preprint arXiv 2502.20171 (27/02/2025); venue revisado a verificar. https://arxiv.org/abs/2502.20171
+- **Código:** sem repositório citado (a verificar). Há um app público de consulta a dicionário, signBuddy: https://woordenboek.vlaamsegebarentaal.be/signBuddy
+- **Problema:** Reconhecer sinais de um **dicionário com 1 vídeo por sinal** (*one-shot*), inclusive de **outra língua de sinais** diferente da do pré-treino.
+- **Método:**
+  - Duas etapas:
+    - (1) pré-treinar um classificador de sinais, o PoseFormer (variante da arquitetura SignON: convoluções 1D, *embedding* por quadro e 4 camadas de atenção com 8 cabeças);
+    - (2) remover a cabeça e usar o encoder **congelado** para busca densa por vizinho mais próximo num *support set* com 1 exemplo por sinal.
+  - Entrada: **MediaPipe Holistic**, só pose e mãos. **Incluir pontos da boca piorou** o *one-shot*.
+- **Dados e protocolo:**
+  - Pré-treino no ASL Citizen (83.399 vídeos, 2.731 sinais) ou no VGT Corpus (24.967 exemplos, 292 sinais).
+  - *Support set*: dicionário de língua de sinais flamenga (VGT) com **10.235 sinais**, 1 vídeo cada.
+  - Consultas: 30 sinais VGT coletados no estudo, com cerca de 11,9 consultas por glosa.
+  - Também reporta WLASL e AUTSL com *support sets* aleatórios (100 sorteios).
+  - Independência de sinalizador das consultas em relação ao dicionário: não declarada (a verificar).
+- **Resultados principais** (fonte: arXiv 2502.20171):
+  - No ASL Citizen (classificação, teste do dataset): PoseFormer Rec@1 de 0,751 contra **0,631 do I3D RGB** do artigo original (MRR 0,833 contra 0,733).
+  - **One-shot** no dicionário VGT (10.235 sinais), com pré-treino em ASL (PF-ASL): Rec@1 de **0,374**, Rec@5 de cerca de 67% e MRR de 0,508 (acaso: Rec@1 de 9,8e-5). Com pré-treino em VGT, Rec@1 de 0,089.
+  - *One-shot* com dicionário de 100 sinais: PF-ASL com Rec@1 de 0,888.
+  - Com *support sets* aleatórios (PF-ASL, Rec@1): WLASL100 0,614; WLASL2000 0,391; AUTSL 0,581.
+- **Relevância para este projeto:**
+  - É **a** referência para a meta de vocabulário completo com dicionários de 1 vídeo por sinal, que é o caso de dicionários de Libras.
+  - Pré-treinar em um dataset grande de outra língua (ASL Citizen) e buscar no dicionário da língua-alvo **funciona melhor** do que pré-treinar na própria língua com poucos dados.
+  - É um modelo de pose com MediaPipe que **supera o I3D** no ASL Citizen, o que apoia o ADR-0002.
+  - Sugere uma métrica de recuperação (Rec@k, MRR) para o protocolo.
+- **Limitações / críticas:**
+  - Preprint, ainda não verificado como revisado.
+  - Poucas consultas (30 sinais).
+  - O controle de sinalizador entre dicionário e consulta não é explícito.
+  - O resultado de Delucis et al. 2025 (transferência entre línguas não ajudou a Libras, em RGB) aponta em direção oposta. Vale testar em pose.

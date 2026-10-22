@@ -1,0 +1,26 @@
+# Enhancing Brazilian Sign Language Recognition through Skeleton Image Representation
+
+- **Referência:** Carlos Eduardo G. R. Alves, Francisco de Assis Boldt, Thiago M. Paixão (IFES). 37º SIBGRAPI, 2024. DOI: 10.1109/SIBGRAPI62404.2024.10716301 · SOL: https://sol.sbc.org.br/index.php/sibgrapi/article/view/31722 · arXiv: https://arxiv.org/abs/2404.19148
+- **Código:** o registro na SOL diz que código e modelos estão no GitHub, mas o arXiv v1 diz "upon acceptance". Link exato: a verificar. Framework: **PyTorch 2.0.1** (segundo o arXiv).
+- **Problema:** ISLR em Libras com poucos dados e protocolo rigoroso.
+- **Método:**
+  - **OpenPose**, 126 pontos 2D (mãos, face e corpo acima do quadril).
+  - A sequência é codificada como **imagem** pelo Skeleton-DML (3 canais, L linhas × 2T/3 colunas, redimensionada para 224×224).
+  - Classificador: ResNet-18 pré-treinada no ImageNet → FC(128) → saída.
+- **Dados e protocolo:**
+  - MINDS-Libras (20 sinais, 12 sinalizadores) e LIBRAS-UFOP (56 sinais, 5 sinalizadores).
+  - ***Nested* Leave-One-Person-Out**: cada sinalizador de teste fica fora do treino, e outro sinalizador é a validação, o que dá n(n−1) execuções. É um protocolo **independente de sinalizador**.
+- **Resultados principais** (média ± desvio; fonte: arXiv 2404.19148):
+  - MINDS-Libras: acurácia 0,93 ± 0,05; F1 0,93 ± 0,05.
+  - LIBRAS-UFOP: acurácia 0,82 ± 0,04; F1 0,80 ± 0,05 na Tabela 1. O texto diz 0,82, uma inconsistência interna.
+  - Números de outros trabalhos citados pelos autores (Tabela 3; os protocolos desses trabalhos não estão explícitos na página):
+    - MINDS-Libras: De Castro et al. 2023 com 0,91; Passos et al. 2021 com 0,85.
+    - LIBRAS-UFOP: De Castro 0,74; Passos 0,65; Cerna et al. 2021 0,74.
+- **Relevância para este projeto:**
+  - Define o protocolo de referência atual em Libras (*nested* LOPO), igual ao que o ADR-0004 propõe.
+  - Seus números são a linha de base direta para MINDS-Libras e LIBRAS-UFOP.
+  - Mostra que mesmo uma CNN 2D sobre "imagem de esqueleto" é competitiva.
+- **Limitações / críticas:**
+  - O OpenPose é lento (ver santos-2025-landmark-subset).
+  - Codificar a sequência como imagem fixa perde a modelagem temporal explícita e não escala bem para sinais de durações muito diferentes.
+  - Os vocabulários são pequenos (20 e 56 sinais).

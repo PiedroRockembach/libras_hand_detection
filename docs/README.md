@@ -19,3 +19,4 @@
 | [0005](decisoes/0005-dados-fora-do-git-e-onedrive.md) | Dados fora do git e fora do OneDrive | Proposta |
 | [0006](decisoes/0006-documentacao-e-contexto-versionados.md) | Documentação e contexto do Claude versionados; uso restrito de subagentes | Proposta |
 | [0007](decisoes/0007-ambiente-em-container.md) | Ambiente em container Docker (abordagem híbrida) | Proposta |
+| [0008](decisoes/0008-estrategia-de-dados-inicial.md) | Estratégia de dados inicial (MINDS-Libras principal, em camadas) | Proposta |

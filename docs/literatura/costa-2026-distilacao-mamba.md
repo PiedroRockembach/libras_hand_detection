@@ -1,0 +1,22 @@
+# Low-Complexity Sign Language Recognition: A Cross-Modal Distillation Approach for State-Space Models
+
+- **Referência:** Victor Costa, Lucas Superti, Brenda Salenave Santana, Tatiana Bolivar Lebedeff, Guilherme Corrêa (UFPel). WebMedia 2026, pp. 291-298. DOI: 10.5753/webmedia.2026.30763 · https://sol.sbc.org.br/index.php/webmedia/article/view/46102 (a página indica publicação em 27/10/2026).
+- **Código:** a verificar.
+- **Problema:** Modelos só de landmarks são eficientes mas perdem acurácia para modelos de vídeo. A pergunta é como fechar essa diferença sem custo de inferência.
+- **Método:**
+  - **Distilação entre modalidades.** O professor é um I3D sobre vídeo RGB (ver costa-2025-i3d-libras).
+  - O aluno é um **Mamba 1D** (modelo de espaço de estados) sobre coordenadas **MediaPipe**, treinado com as probabilidades suaves do professor.
+- **Dados e protocolo:**
+  - Libras, avaliação **independente de sinalizador**.
+  - Dataset, número de classes e divisões: **a verificar** (não constam no resumo; provavelmente MINDS-Libras, como no trabalho anterior do grupo, mas não confirmado).
+- **Resultados principais** (resumo):
+  - Mamba 1D sem distilação: **71%**.
+  - Mamba 1D distilado: **78%** (+7 pontos).
+  - Custo do aluno: latência de 0,21 ms, 9,81 MB de VRAM e 0,004 J por inferência, cerca de 99,7% menos energia que o baseline de vídeo.
+- **Relevância para este projeto:**
+  - Evidência em Libras de que, **no mesmo protocolo**, um modelo só de landmarks perde para o RGB, e de que a distilação RGB → landmarks recupera parte da diferença.
+  - Oferece uma via híbrida compatível com o ADR-0002: usar RGB só no treino, como professor, e manter landmarks na inferência.
+  - O Mamba é um candidato leve para a demo em tempo real (Fase 5).
+- **Limitações / críticas:**
+  - Só o resumo foi verificado; o dataset não foi confirmado.
+  - O 71% do aluno sem distilação está bem abaixo de outros resultados de landmarks em Libras (0,94 em LOPO no MINDS). Se o dataset for o MINDS, isso sugere que o baseline de landmarks deles é fraco (normalização, subconjunto de pontos), e o ganho da distilação pode ser em parte efeito disso. A verificar no texto completo.
