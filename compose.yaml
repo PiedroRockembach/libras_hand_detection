@@ -1,0 +1,23 @@
+# Execuções sem interface (ex.: treino na máquina Linux com a RTX 5090, via SSH):
+#   export LIBRAS_DATA_ROOT=~/libras-data
+#   docker compose run --rm libras python -c "import torch; print(torch.cuda.get_device_name())"
+services:
+  libras:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
+    image: libras:dev
+    volumes:
+      - .:/workspace
+      - ${LIBRAS_DATA_ROOT:?defina LIBRAS_DATA_ROOT no host}:/data
+    shm_size: 8gb  # DataLoader com vários workers usa memória compartilhada
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
