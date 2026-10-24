@@ -1,0 +1,27 @@
+# Towards Zero-shot Sign Language Recognition
+
+- **Referência:** Yunus Can Bilge, Ramazan Gokberk Cinbis, Nazli Ikizler-Cinbis. IEEE TPAMI, vol. 45, n. 1, 2023 (online em 2022). DOI: 10.1109/TPAMI.2022.3143074 (registro METU: https://open.metu.edu.tr/handle/11511/97709) · arXiv: https://arxiv.org/abs/2201.05914
+- **Código / dados:** página do projeto citada no artigo: ycbilge.github.io/towardszslsign.html (a verificar se continua no ar).
+- **Problema:** Reconhecer sinais **nunca vistos no treino** (*zero-shot*) a partir de descrições textuais de dicionário e de atributos.
+- **Método:**
+  - Entrada **RGB**: fluxo do corpo inteiro mais fluxo da região das mãos (recortada com OpenPose), com *features* I3D ou TSM.
+  - Representação semântica das classes:
+    - descrições do *Webster American Sign Language Dictionary* codificadas com BERT;
+    - 53 atributos binários do *ASL Handshape Dictionary* (configuração de mão, orientação da palma, local, movimento, repetição, uma ou duas mãos).
+  - O modelo aprende a compatibilidade entre vídeo e descrição.
+- **Dados e protocolo:**
+  - Três benchmarks novos:
+    - ASL-Text (do ASLLVD): 250 classes, sendo 170 vistas, 30 de validação e 50 não vistas;
+    - MS-ZSSLR-W e MS-ZSSLR-C (do MS-ASL): 200 classes, sendo 120, 30 e 50.
+  - As divisões são **disjuntas em classe**; um protocolo disjunto em sinalizador **não é descrito**.
+- **Resultados principais** (top-1 / top-5 nas 50 classes não vistas; acaso = 2,0 / 10,0; fonte: arXiv 2201.05914):
+  - ASL-Text: bi-LSTM com atributos + texto 31,3 / 66,0; só texto 20,9 / 51,4.
+  - MS-ZSSLR-C: TSM com atributos + texto 14,7 / 43,4.
+- **Relevância para este projeto:**
+  - Mostra que **atributos fonológicos** (configuração, local, movimento) dão mais informação para sinais novos do que texto livre. Isso apoia a decomposição em parâmetros.
+  - Um dicionário de Libras com descrição dos parâmetros por verbete (por exemplo, dicionários com notação de configuração de mão) poderia servir de espaço semântico.
+- **Limitações / críticas:**
+  - Acurácias baixas (14–31% em apenas 50 classes).
+  - Usa RGB, não pose.
+  - Não controla sinalizador.
+  - Ainda está longe de uso prático.

@@ -1,0 +1,24 @@
+# Isolated Sign Language Recognition in LIBRAS (MALTA-LIBRAS)
+
+- **Referência:** Marcelo M. Delucis, Otávio Parraga, Rodrigo C. Barros, Lucas S. Kupssinskü (PUCRS). BRACIS 2025 (Trilha de Aplicações – Bem Social), pp. 275-290. SOL: https://sol.sbc.org.br/index.php/bracis/article/view/40864 . O PDF redireciona para a Springer (capítulo 10.1007/978-3-032-15990-8_19, DOI deduzido da URL de redirecionamento; a verificar).
+- **Código / dados:** https://huggingface.co/datasets/MALTA-Lab/MALTA_LIBRAS (licença indicada: MIT). Tem dois subconjuntos de tensores: `malta_libras_minds_subset` (os 20 sinais do MINDS) e `malta_libras_complete`.
+- **Problema:** A Libras tem poucos dados, e o MINDS é homogêneo (fundo, iluminação e câmera controlados). Os autores propõem um conjunto de teste mais diverso e investigam a generalização.
+- **Método:**
+  - Classificadores de vídeo **RGB** baseados em transformer: VideoMAE, TimeSformer e ViViT.
+  - Comparam pré-treino em reconhecimento de ação, estratégias de aumento de dados e transferência a partir de outras línguas de sinais.
+- **Dados e protocolo:**
+  - MALTA-LIBRAS, montado a partir de fontes abertas online. Tamanho, número de sinais e de sinalizadores: **a verificar** (o resumo não informa).
+  - Divisões e protocolo exatos: a verificar.
+- **Resultados principais** (qualitativos, do resumo; números a verificar):
+  - (1) O pré-treino em reconhecimento de ação melhora muito a generalização para fora da distribuição de ajuste fino.
+  - (2) Os aumentos de dados ajudam.
+  - (3) Transferir de outras línguas de sinais **não** traz ganho significativo para a Libras.
+- **Trabalho relacionado do mesmo grupo:** Lazzarotto, Delucis, Barcelos, Barros, Kupssinskü, "Evaluation of 3D Convolutional Neural Networks on Isolated Brazilian Sign Language Recognition", ERAMIA-RS 2025, DOI 10.5753/eramiars.2025.16773 (https://sol.sbc.org.br/index.php/eramiars/article/view/39408). CNNs 3D treinadas no MINDS e testadas no MALTA-LIBRAS têm métricas altas no treino e na validação, mas **sobreajustam e generalizam mal** para o domínio novo. Os números estão no PDF: a verificar.
+- **Relevância para este projeto:**
+  - Grupo da mesma instituição (PUCRS). Possível colaboração ou dataset de teste externo.
+  - Mostra que o MINDS-Libras é um benchmark "fácil" e homogêneo, e que **teste entre datasets** é o protocolo mais revelador.
+  - Bom argumento para avaliar nossos modelos de landmarks no MALTA-LIBRAS, já que landmarks deveriam ser mais robustos a fundo e iluminação (ADR-0002).
+- **Limitações / críticas:**
+  - Sem números verificados.
+  - Abordagem só RGB, sem comparação com pose.
+  - É preciso conferir a licença e a origem dos vídeos (fontes online) com o agente de datasets.

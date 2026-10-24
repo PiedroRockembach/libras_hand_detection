@@ -1,0 +1,23 @@
+# The Sem-Lex Benchmark: Modeling ASL Signs and Their Phonemes
+
+- **Referência:** Lee Kezar et al. (USC, Boston University, Chapman University). ASSETS 2023 (ACM SIGACCESS). arXiv: https://arxiv.org/abs/2310.00196
+- **Código / dados:** https://github.com/leekezar/SemLex. O arXiv é CC BY-NC-SA 4.0. Os autores pedem compromisso de "do no harm" e de trabalho junto à comunidade surda. A licença do dataset é para o agente de datasets verificar.
+- **Problema:** Criar um benchmark grande de ISLR com rótulos fonológicos, coletado com consentimento e remuneração de sinalizadores surdos.
+- **Método:**
+  - SL-GCN sobre pose (estimador não informado na versão consultada).
+  - Treino só com glosa, comparado a treino multitarefa com 16 tipos de *features* fonológicas do ASL-LEX.
+- **Dados e protocolo:**
+  - **84.568 vídeos**, 41 sinalizadores surdos (3 removidos), **3.149 sinais**; 65.935 vídeos têm glosa.
+  - Ligação manual com o ASL-LEX, o SignBank e o ASL Citizen.
+  - Divisão 3:1:1. **O teste contém só sinalizadores não vistos** (10 participantes): é independente de sinalizador. A validação usa sinalizadores vistos.
+- **Resultados principais** (fonte: arXiv 2310.00196):
+  - ISLR top-1: só glosa 66,6% → com fonologia 68,6% (Tabelas 4 e 6). O texto das seções 5.1/5.3 diz 67,7 → 71,3, uma inconsistência interna; o "+2%" do resumo bate com as tabelas.
+  - ***Few-shot*:** com 4 amostras por sinal, 62,2 → 68,2 (+6 pontos); com 10 amostras, 72,3 → 73,0.
+  - **Reconhecimento fonológico:** média top-1 de cerca de 85,8% com ajuste fino por tipo e de cerca de 85,0% multitarefa. Os piores tipos são movimento de trajetória, configuração de mão e local menor secundário.
+- **Relevância para este projeto:**
+  - Modelo de dataset que a Libras não tem: vocabulário de milhares de sinais, rótulos fonológicos, teste independente de sinalizador e coleta ética.
+  - Mostra que a supervisão fonológica **ajuda mais quando há poucos exemplos por sinal** (+6 pontos com 4 exemplos), justamente o regime de vocabulário completo.
+- **Limitações / críticas:**
+  - Inconsistências numéricas entre texto e tabelas.
+  - Com 10 exemplos por sinal, o ganho cai a quase zero.
+  - Configuração de mão continua entre os parâmetros mais difíceis.

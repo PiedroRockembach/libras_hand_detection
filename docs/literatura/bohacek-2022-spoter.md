@@ -1,0 +1,27 @@
+# Sign Pose-based Transformer for Word-level Sign Language Recognition (SPOTER)
+
+- **Referência:** Matyáš Boháček, Marek Hrúz. WACV Workshops (HADCV), 2022, pp. 182-191. https://openaccess.thecvf.com/content/WACV2022W/HADCV/html/Bohacek_Sign_Pose-Based_Transformer_for_Word-Level_Sign_Language_Recognition_WACVW_2022_paper.html
+- **Código:** https://github.com/matyasbohacek/spoter (Python; código em Apache-2.0). Os esqueletos de WLASL100 e LSA64 são distribuídos em CC BY-NC 4.0. O framework de deep learning não é citado no README (a verificar).
+- **Problema:** Fazer ISLR leve o bastante para rodar em dispositivos móveis, usando apenas pose 2D.
+- **Método:**
+  - Transformer sobre sequências de 54 pontos 2D (corpo + mãos), extraídos originalmente com a Vision API da Apple. Esse número de pontos vem do trabalho seguinte, bohacek-2022-spoter-mediapipe.
+  - **Normalização em dois níveis:**
+    - o corpo é normalizado pelo "espaço de sinalização";
+    - cada mão é normalizada num sistema de coordenadas local, independente da pose do corpo.
+  - Os autores mostram experimentalmente que essa normalização tem impacto significativo na acurácia.
+  - **Aumentos de pose:** inclui uma rotação sequencial de articulações, proposta no artigo. A lista completa dos aumentos e a tabela de ablação estão no PDF, que não consegui acessar (HTTP 403): a verificar.
+- **Dados e protocolo:**
+  - WLASL100 e WLASL300, com divisões oficiais. A independência de sinalizador não é explícita no WLASL (ver li-2020-wlasl).
+  - LSA64 (língua de sinais argentina): o protocolo usado está a verificar.
+- **Resultados principais** (top-1; fonte: página CVF e resumo):
+  - WLASL100: 63,18%.
+  - WLASL300: 43,78%.
+  - LSA64: 100%.
+- **Relevância para este projeto:**
+  - Referência direta para a normalização no ADR-0002: o corpo relativo ao espaço de sinalização e cada mão relativa a si mesma.
+  - Essa normalização preserva a forma da mão (configuração) separadamente da trajetória (movimento e ponto de articulação), o que casa com a decomposição fonológica.
+  - Ganha força com o trabalho seguinte, que só trocou o estimador para o MediaPipe (bohacek-2022-spoter-mediapipe).
+- **Limitações / críticas:**
+  - Números modestos com a Vision API.
+  - O LSA64 está saturado (100%).
+  - Não verifiquei as ablações de normalização e aumento por falta de acesso ao PDF.

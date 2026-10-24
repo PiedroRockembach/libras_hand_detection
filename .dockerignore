@@ -1,0 +1,11 @@
+.git
+.venv
+data
+outputs
+runs
+mlruns
+checkpoints
+**/__pycache__
+**/.ipynb_checkpoints
+configs/paths.yaml
+.claude/settings.local.json

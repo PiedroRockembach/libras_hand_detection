@@ -1,0 +1,33 @@
+# Exploring Pose-based Sign Language Translation: Ablation Studies and Attention Insights
+
+- **Referência:** Tomas Zelezny, Jakub Straka, Vaclav Javorek, Ondrej Valach, Marek Hrúz, Ivan Gruber. arXiv 2507.01532 (02/07/2025), associado ao SLRTP 2025 / CVPR 2025 Workshops. https://arxiv.org/abs/2507.01532
+- **Código:** https://github.com/zeleznyt/T5_for_SLT (inclui o YouTube-ASL pré-processado, segundo os autores). Framework: a verificar (baseado em T5, provavelmente PyTorch/HF).
+- **Problema:** Medir o efeito do pré-processamento de pose (normalização, interpolação de pontos ausentes, aumentos) num modelo de tradução baseado em pose.
+- **Método:**
+  - Corte do espaço de sinalização com YOLOv8-nano.
+  - MediaPipe (corpo, mãos e malha facial): 104 pontos (x, y).
+  - Encoder-decoder T5 modificado.
+- **Dados e protocolo:**
+  - Treino no YouTube-ASL e avaliação no How2Sign (tradução; métrica BLEU).
+  - Os autores reportam o melhor de 3 *seeds*. Não é ISLR, e o protocolo de sinalizador não se aplica da mesma forma.
+- **Resultados principais** (How2Sign, BLEU-4; fonte: arXiv 2507.01532):
+  - **Normalização:** nenhuma 0,73; por clipe 0,66; por quadro 1,13; **SignSpace** (relativa ao espaço de sinalização) **2,17**.
+  - **Interpolação de pontos ausentes** (sobre o SignSpace): nenhuma, com ausentes = −10, 2,17; linear em lacunas de até 2 quadros 2,43; até 3 quadros 2,33.
+  - **Aumentos individuais:**
+    - rotação 1,61 (prejudica);
+    - perspectiva 2,17;
+    - cisalhamento 2,20;
+    - rotação de cotovelo 2,28;
+    - ruído 2,41 (ajuda).
+  - **Protocolos de aumento:** leve 1,71; médio 2,46; pesado 2,29.
+  - Há uma inconsistência interna: o espaço de sinalização é descrito como 4 vezes a distância entre ombros numa seção e 3 vezes em outra.
+- **Relevância para este projeto:**
+  - É o estudo mais sistemático que encontrei sobre os três fatores do ADR-0002 com MediaPipe.
+  - Lições transferíveis (a confirmar em ISLR):
+    - (1) a normalização pelo espaço de sinalização é o fator dominante;
+    - (2) a interpolação **curta** (até 2–3 quadros) ajuda pouco mas de forma consistente;
+    - (3) **rotação forte prejudica**: provavelmente distorce o ponto de articulação e a orientação, que são fonológicos. Os aumentos devem ser moderados.
+- **Limitações / críticas:**
+  - É tradução, não ISLR.
+  - BLEU baixo e diferenças pequenas, reportadas como melhor de 3 *seeds* (sem desvio).
+  - A significância estatística não é avaliada.

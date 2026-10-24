@@ -1,0 +1,24 @@
+# MSE-GCN: A Multiscale Spatiotemporal Feature Aggregation Enhanced Efficient Graph Convolutional Network for Dynamic Sign Language Recognition
+
+- **Referência:** Neelma Naz, Hasan Sajid, Sara Ali, Osman Hasan, Muhammad Khurram Ehsan (NUST, Paquistão). IEEE Transactions on Emerging Topics in Computational Intelligence, vol. 9, n. 4, pp. 2979-2994, 2025 (publicado online em 16/12/2024). DOI: https://doi.org/10.1109/TETCI.2024.3509500 (metadados via OpenAlex: https://api.openalex.org/works/doi:10.1109/TETCI.2024.3509500). Acesso fechado.
+- **Código:** a verificar.
+- **Problema:** SLR baseado em esqueleto com GCN que capture dependências espaciais e temporais de curto e longo alcance a baixo custo.
+- **Método** (segundo o resumo):
+  - Convoluções separáveis multiescala numa rede multirramo, com fusão precoce de *features*.
+  - Módulo de atenção híbrido ST-JPA (*Spatial Temporal Joint Part attention*), que destaca partes do corpo, articulações e quadros-chave.
+  - Estimador de pose usado: a verificar.
+- **Dados e protocolo:**
+  - WLASL-100/300/1000, MINDS-Libras e LIBRAS-UFOP.
+  - Protocolo nos datasets de Libras: **a verificar**. Dos Santos et al. 2025 (https://arxiv.org/abs/2510.24887) afirmam que a avaliação no MINDS-Libras foi "menos robusta que LOPO", e a descrição do UFOP é inconsistente entre a tabela e o texto deles.
+- **Resultados principais** (segundo o resumo, via OpenAlex):
+  - WLASL-100: 85,27%.
+  - WLASL-300: 81,59%.
+  - WLASL-1000: 71,75%.
+  - MINDS-Libras: 97,442 ± 1,01%.
+  - LIBRAS-UFOP: 88,59 ± 3,60%.
+- **Relevância para este projeto:**
+  - É o único GCN "moderno" avaliado em datasets de Libras que encontrei. É o número a bater, com a ressalva de protocolo.
+  - Reforça a escolha da Fase 4 (grafos espaço-temporais).
+- **Limitações / críticas:**
+  - Acesso fechado, por isso arquitetura e protocolo não foram verificados.
+  - Sem verificar o protocolo, o 97,4% no MINDS **não é comparável** a resultados LOPO.

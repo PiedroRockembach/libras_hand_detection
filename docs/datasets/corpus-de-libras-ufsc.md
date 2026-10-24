@@ -1,0 +1,13 @@
+# Corpus de Libras (UFSC) / Inventário Nacional de Libras
+
+- **Referência:** Quadros, R. M.; Schmitt, D.; Lohn, J. T.; Leite, T. A. *Corpus de Libras*, 2020, [corpuslibras.ufsc.br](https://corpuslibras.ufsc.br/). Capítulo: Quadros, Leite, Lohn, Schmitt, "Brazilian Sign Language Documentation", em *Brazilian Sign Language Studies*, Ishara Press / De Gruyter, 2020, pp. 9–32. Citação recomendada pelo próprio site ([Como citar](https://corpuslibras.ufsc.br/espacointerativo/perguntas/view/9)). Artigo de método: Quadros et al., "Inventário nacional de Libras", Fórum Linguístico 17(4):5457–5474, 2020 (citado em [Martins et al., PROPOR 2026](https://aclanthology.org/2026.propor-1.112.pdf)).
+- **Licença / termos de uso:** **a verificar.** As páginas "Sobre" e "Como citar" não informam licença ([Sobre](https://corpuslibras.ufsc.br/informacoesdoprojeto); [Como citar](https://corpuslibras.ufsc.br/espacointerativo/perguntas/view/9)). A página inicial diz que pesquisadores podem acessar gratuitamente ([corpuslibras.ufsc.br](https://corpuslibras.ufsc.br/)).
+- **Como obter:** cadastro e login no portal ([corpuslibras.ufsc.br](https://corpuslibras.ufsc.br/)). Parte dos registros do Inventário também está no repositório institucional da UFSC ([Inventário Nacional de Libras - Surdos de Referência](https://repositorio.ufsc.br/handle/123456789/178867)). Se há download em lote e em que formato: **a verificar.**
+- **Conteúdo:** três subprojetos: (1) **Inventário Nacional de Libras**, com registros por estado e informantes em três faixas etárias (19–29, 30–49, 50+); (2) produção acadêmica (aulas, Prolibras, palestras); (3) Antologias literárias em Libras ([Sobre](https://corpuslibras.ufsc.br/informacoesdoprojeto)). Horas, número de informantes e número de sinais: **a verificar.** Anotação em ELAN, segundo trabalhos que usam o corpus ([repositório UFSC](https://repositorio.ufsc.br/handle/123456789/211385)).
+- **Protocolo oficial de avaliação:** não existe. É um corpus linguístico de sinalização **contínua e espontânea**, não um benchmark de reconhecimento.
+- **Resultados de referência na literatura:** nenhum benchmark de reconhecimento encontrado.
+- **Status no projeto:** candidato (fase futura: contínuo, validação com sinalização natural, extração de vocabulário por glosas).
+- **Observações:**
+  - Não serve ao escopo inicial (sinais isolados).
+  - É a fonte mais natural para medir se um modelo de sinais isolados funciona em sinalização real e para minerar exemplos de glosas, desde que as anotações ELAN estejam acessíveis.
+  - Pode envolver imagem de pessoas identificáveis. Verificar termos de uso antes de qualquer redistribuição de derivados (incluindo landmarks).

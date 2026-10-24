@@ -1,0 +1,27 @@
+# Evaluating the Immediate Applicability of Pose Estimation for Sign Language Recognition
+
+- **Referência:** Amit Moryossef, Ioannis Tsochantaridis et al. CVPR 2021 Workshops (ChaLearn LAP), pp. 3434-3440. https://openaccess.thecvf.com/content/CVPR2021W/ChaLearn/html/Moryossef_Evaluating_the_Immediate_Applicability_of_Pose_Estimation_for_Sign_Language_CVPRW_2021_paper.html · arXiv: https://arxiv.org/abs/2104.10166
+- **Código:** não há código dos experimentos. Recursos relacionados: https://github.com/AmitMY/pose-format (formato e ferramentas de pose) e https://github.com/sign-language-processing/datasets (as poses foram disponibilizadas ali).
+- **Problema:** Medir quanta informação a representação por esqueleto perde em ISLR e caracterizar as falhas.
+- **Método:**
+  - Dois estudos independentes, cada um de uma equipe:
+    - equipe 1: transformer sobre OpenPose (corpo inteiro) e MediaPipe Holistic;
+    - equipe 2: BiLSTM sobre os mesmos dois estimadores, com o Holistic **sem a malha facial** (75 pontos).
+  - Análise dos casos de falha.
+- **Dados e protocolo:** AUTSL no desafio ChaLearn 2021, **independente de sinalizador**.
+- **Resultados principais** (fonte: arXiv 2104.10166):
+  - Validação: OpenPose 83,25% (equipe 1) e 79,99% (equipe 2); Holistic 85,63% (equipe 1) e 82,14% (equipe 2).
+  - Teste: OpenPose 78,35% e Holistic 78,35%; os dois combinados chegam a 81,93%.
+  - O melhor do desafio (multimodal, SAM-SLR) teve 98,4%.
+  - Baselines RGB da equipe 1 na validação: I3D (BSL1K) 68,65% e EfficientNet-B7 38,80%, abaixo da pose. A diferença para o SAM-SLR vem de melhor modelagem e *ensemble*, não de "RGB puro".
+  - **Falhas:**
+    - interação mão–mão: uma das mãos não é detectada ou é mal estimada;
+    - interação mão–rosto: a mão que toca o rosto frequentemente não é estimada;
+    - acertos têm pontos da mão em 85,13% dos quadros, contra 79,78% nos erros (Wilcoxon, p < 0,0001).
+- **Relevância para este projeto:**
+  - Principal **crítica** ao ADR-0002: o MediaPipe falha justamente em contato mão–rosto e mão–mão, que são frequentes em sinais da Libras com ponto de articulação no rosto.
+  - Confirma a necessidade de medir a taxa de detecção de mãos (Fase 2) e de tratar ausências (máscara ou imputação).
+  - Sugere registrar a taxa de detecção por amostra e correlacioná-la com o erro.
+- **Limitações / críticas:**
+  - Modelos simples (BiLSTM, transformer) sem normalização elaborada.
+  - Resultados de 2021: o MediaPipe evoluiu (API Tasks) e modelos posteriores com Holistic chegam a 91,9% no AUTSL (OpenHands).

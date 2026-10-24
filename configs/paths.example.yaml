@@ -1,0 +1,9 @@
+# Copie para configs/paths.yaml (ignorado pelo git).
+# Dentro do container (ambiente oficial, ADR-0007) os dados ficam sempre em /data,
+# montado a partir de LIBRAS_DATA_ROOT no host. Para execução nativa, troque pelo caminho local
+# (fora do OneDrive, ADR-0005).
+data_root: /data
+# Subpastas criadas dentro de data_root:
+#   raw/        vídeos originais, um subdiretório por dataset
+#   landmarks/  landmarks extraídos (.npz), cache da extração
+#   runs/       saídas de experimentos (checkpoints, métricas, MLflow)

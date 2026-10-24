@@ -1,0 +1,32 @@
+{
+  // Ambiente de desenvolvimento no VS Code (ADR-0007).
+  // No Windows: clone o repositório DENTRO do WSL2 e abra por lá, para evitar
+  // a lentidão de montar C:\ (e a sincronização do OneDrive).
+  "name": "libras",
+  "build": {
+    "context": "..",
+    "dockerfile": "../docker/Dockerfile"
+  },
+  "runArgs": ["--gpus", "all", "--shm-size", "8gb"],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localEnv:LIBRAS_DATA_ROOT},target=/data,type=bind"
+  ],
+  "remoteUser": "dev",
+  "updateRemoteUserUID": true,
+  "postCreateCommand": "uv sync --frozen",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "charliermarsh.ruff",
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python"
+      }
+    }
+  }
+}

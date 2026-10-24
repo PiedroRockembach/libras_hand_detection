@@ -1,0 +1,40 @@
+[project]
+name = "libras"
+version = "0.1.0"
+description = "Reconhecimento de sinais da Libras a partir de landmarks em vídeo"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "torch>=2.7",          # 2.7 é a primeira versão com wheels CUDA 12.8 (necessário para a RTX 5090)
+    "mediapipe>=0.10.14",
+    "opencv-python>=4.9",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scikit-learn>=1.4",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+    "matplotlib>=3.8",
+    "mlflow>=2.12",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.5", "jupyterlab>=4"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/libras"]
+
+# PyTorch com CUDA 12.8: atende RTX 4080 (sm_89) e RTX 5090 (sm_120)
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

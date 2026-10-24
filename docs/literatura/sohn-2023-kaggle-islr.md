@@ -1,0 +1,55 @@
+# Google – Isolated Sign Language Recognition (Kaggle, 2023): 1º lugar (1D CNN + Transformer), com notas sobre o 2º lugar
+
+- **Referência:** Hoyeol Sohn (hoyso48). Write-up "1st place solution - 1DCNN combined with Transformer", Kaggle, 2023: https://www.kaggle.com/competitions/asl-signs/discussion/406684 . O texto da página não pôde ser lido pela ferramenta (renderização em JS), por isso os detalhes abaixo vêm do notebook oficial do autor.
+- **Código:** https://github.com/hoyso48/Google---Isolated-Sign-Language-Recognition-1st-place-solution (licença MIT), notebook `ISLR_1st_place_Hoyeol_Sohn.ipynb`. Framework: **TensorFlow 2.12 / Keras** (+ tensorflow-addons), treinado em TPU com 8 réplicas. O modelo TFLite está espelhado em https://huggingface.co/sign/kaggle-asl-signs-1st-place (MIT).
+- **Problema:** Classificar sinais isolados da ASL (app PopSign) a partir de **landmarks MediaPipe Holistic** já extraídos (543 pontos por quadro). O modelo final precisava ser TFLite, com limites de tamanho e tempo.
+- **Método** (lido do código):
+  - **Pontos usados (118):** 40 dos lábios, 21 de cada mão, 4 do nariz e 16 de cada olho. Os índices da pose (corpo) estão definidos mas **comentados**, ou seja, o corpo não é usado.
+  - **Normalização:**
+    - centro no landmark 17 (lábio), com média calculada ignorando NaN;
+    - escala pelo desvio-padrão ignorando NaN: `(x - mean) / std`;
+    - só x e y (o z é descartado).
+  - **Features:** posição, diferença de 1ª ordem (t+1 − t) e de 2ª ordem (t+2 − t), totalizando 6 canais por ponto e 708 dimensões.
+  - **Pontos ausentes:** quadros sem nenhuma mão ou lábio são descartados; NaN → 0 após a normalização; máscara de *padding*.
+  - **Aumentos:**
+    - reamostragem temporal ×0,5–1,5 (probabilidade 0,8);
+    - espelhamento esquerda/direita com troca de índices (0,5);
+    - recorte temporal;
+    - afim (escala 0,8–1,2, cisalhamento ±0,15, rotação ±30°, translação ±0,1; probabilidade 0,75);
+    - máscara temporal de 20–40% dos quadros (0,5);
+    - máscara espacial retangular (0,5).
+  - **Arquitetura:**
+    - *stem* Dense(192) + BatchNorm;
+    - duas repetições de [3 × Conv1DBlock + 1 × TransformerBlock];
+    - Conv1DBlock = expansão ×2 → conv 1D *depthwise* **causal** com kernel 17 → BN → atenção de canal ECA → projeção, dropout 0,2 e resíduo;
+    - TransformerBlock com 4 cabeças;
+    - cabeça: Dense(384) → *global average pooling* → LateDropout(0,8) → Dense(250).
+    - Total de **1.836.569 parâmetros**.
+  - **Treino:**
+    - 300 épocas, RAdam + Lookahead, LR 4e-3 com decaimento cosseno, *weight decay* 0,1;
+    - *label smoothing* 0,1, AWP (λ = 0,2 a partir da época 15), precisão mista.
+    - O código de treino com todos os dados e *seeds* 42–45 aparece comentado; o *ensemble* final está a verificar.
+- **Dados e protocolo:**
+  - Dados da competição: 94.477 amostras e 250 classes, divididas em 5 *folds* (segundo o notebook).
+  - Número de sinalizadores e se o teste oculto tinha sinalizadores fora do treino: **a verificar** (a página de dados do Kaggle não foi acessível).
+  - Também está a verificar se os *folds* do notebook são agrupados por participante.
+- **Resultados principais:**
+  - CV e pontuações pública e privada do 1º lugar: **a verificar** (não consegui ler o write-up).
+  - O notebook registra uma execução interrompida no *fold* 0 com acurácia de validação de cerca de 0,763 na época 80. Não é o resultado final.
+- **Notas sobre o 2º lugar** (https://github.com/ffs333/2nd_place_GISLR, Apache-2.0, treinado em PyTorch e portado para Keras/TFLite):
+  - *Ensemble* de EfficientNet-B0 (2D sobre uma "imagem" de 160 quadros × 80 pontos) com BERT e DeBERTa (61 pontos: 40 dos lábios + 21 da mão).
+  - Mantém a mão com menos NaN e espelha a direita para a esquerda.
+  - Aumentos: afim, interpolação temporal, *flip*, rotação de dedos; *mixup*, troca de partes entre amostras da mesma classe e mascaramento tempo/frequência.
+  - Pontuações informadas no README: EfficientNet-B0 de um *fold* com CV 0,898 e leaderboard em torno de 0,8; com BERT e DeBERTa, em torno de 0,81 no leaderboard. O README não discrimina público e privado.
+- **Relevância para este projeto:**
+  - É a arquitetura de referência mais próxima do ADR-0002: landmarks MediaPipe e modelo pequeno, de cerca de 1,8 M de parâmetros, compatível com tempo real.
+  - Dá uma receita completa e testada de normalização, features de velocidade e aceleração, aumentos e tratamento de NaN para o baseline da Fase 3/4.
+  - Dois pontos chamam atenção:
+    - os vencedores **descartaram o corpo** e priorizaram lábios e mãos;
+    - a convolução temporal 1D (*depthwise*, kernel grande) foi o núcleo, mais do que a atenção.
+  - O ponto de articulação no corpo se perde ao descartar a pose. Para a Libras, isso precisa ser testado em ablação, não assumido.
+- **Limitações / críticas:**
+  - Write-up não verificado e protocolo de sinalizador desconhecido.
+  - O vocabulário de 250 sinais é de vocabulário infantil (PopSign).
+  - Muitos truques são específicos da competição (AWP, LateDropout), e não há ablações publicadas em artigo revisado.
+  - O código está em TensorFlow, não em PyTorch (ADR-0003), o que exige portar.
