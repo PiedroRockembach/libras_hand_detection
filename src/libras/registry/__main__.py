@@ -16,6 +16,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from libras.provenance import log_event
 from libras.registry.build import ADAPTERS, build, propose_labels, scan
 from libras.registry.store import load_registry, snapshot, validate
 
@@ -38,13 +39,22 @@ def main() -> int:
         p.error(f"{args.cmd} needs --data-root or LIBRAS_DATA_ROOT")
 
     if args.cmd == "propose-labels":
-        print(propose_labels(scan(data_root, args.sources)))
+        added = propose_labels(scan(data_root, args.sources))
+        print(added)
+        log_event(data_root, "registry.propose_labels", inputs=[f"raw ({s})" for s in args.sources],
+                  outputs=["metadata/registry/glosses.csv", "metadata/registry/label_map.csv"],
+                  result=added)
         return 0
 
     if args.cmd == "build":
         report = build(data_root, args.sources, probe=not args.no_probe)
+        report = {k: dict(v) if isinstance(v, Counter) else v for k, v in report.items()}
         for k, v in report.items():
-            print(f"{k}: {dict(v) if isinstance(v, Counter) else v}")
+            print(f"{k}: {v}")
+        log_event(data_root, "registry.build", inputs=[f"raw ({s})" for s in args.sources]
+                  + ["metadata/registry/"],
+                  outputs=["registry/current/samples.csv", "registry/current/signers.csv",
+                           "registry/current/unmapped_labels.csv"], result=report)
         return 0
 
     reg = load_registry(data_root)
@@ -61,6 +71,8 @@ def main() -> int:
 
     digest = snapshot(reg, data_root, args.version)
     print(f"snapshot {args.version}: {counts}; sha256={digest}")
+    log_event(data_root, "registry.snapshot", inputs=["registry/current/", "metadata/registry/"],
+              outputs=[f"registry/{args.version}/"], result={"sha256": digest, "counts": counts})
     return 0
 
 

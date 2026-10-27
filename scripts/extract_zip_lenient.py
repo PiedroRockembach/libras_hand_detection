@@ -14,16 +14,28 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import struct
 import sys
 import zipfile
 import zlib
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from libras.provenance import log_event
+
 LOCAL_SIG = b"PK\x03\x04"
 LOCAL_HEADER = struct.Struct("<4s5H3I2H")  # sig, ver, flags, method, time, date, crc, csize, usize, n, m
 CHUNK = 8 << 20
 WRAP = 1 << 32
+
+
+def file_crc(path: Path) -> int:
+    crc = 0
+    with path.open("rb") as f:
+        while chunk := f.read(CHUNK):
+            crc = zlib.crc32(chunk, crc)
+    return crc
 
 
 def find_data_offset(f, info: zipfile.ZipInfo, file_size: int) -> int:
@@ -72,12 +84,15 @@ def main() -> int:
     p.add_argument("archive", type=Path)
     p.add_argument("dest", type=Path)
     p.add_argument("--exclude", nargs="*", default=["__MACOSX/"], help="name prefixes or suffixes to skip")
+    p.add_argument("--data-root", type=Path, default=os.environ.get("LIBRAS_DATA_ROOT"),
+                   help="log the operation to <data-root>/PROVENANCE.jsonl (default: $LIBRAS_DATA_ROOT)")
     args = p.parse_args()
 
     dest_root = args.dest.resolve()
     file_size = args.archive.stat().st_size
     done = skipped = 0
-    errors = []
+    errors: list[str] = []
+    reextracted: list[str] = []
     with zipfile.ZipFile(args.archive) as zf, args.archive.open("rb") as f:
         for info in zf.infolist():
             name = info.filename
@@ -88,17 +103,26 @@ def main() -> int:
                 errors.append(f"{name}: path escapes destination")
                 continue
             if target.exists() and target.stat().st_size == info.file_size:
-                skipped += 1
-                continue
+                if file_crc(target) == info.CRC:
+                    skipped += 1
+                    continue
+                reextracted.append(name)
             target.parent.mkdir(parents=True, exist_ok=True)
             try:
                 extract_member(f, info, file_size, target)
                 done += 1
             except ValueError as e:
                 errors.append(str(e))
-    print(f"{args.archive.name}: extracted {done}, skipped {skipped}, errors {len(errors)}")
+    summary = (f"{args.archive.name}: extracted {done}, skipped {skipped} (CRC ok), "
+               f"re-extracted {len(reextracted)} (CRC mismatch), errors {len(errors)}")
+    print(summary)
     for e in errors[:10]:
         print("  " + e)
+    if args.data_root:
+        root = args.data_root.resolve()
+        log_event(root, "extract_zip", inputs=[str(args.archive.resolve().relative_to(root))],
+                  outputs=[str(dest_root.relative_to(root))],
+                  result={"summary": summary, "errors": errors, "reextracted": reextracted})
     return 1 if errors else 0
 
 

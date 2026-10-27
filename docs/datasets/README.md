@@ -38,6 +38,24 @@ Números verificados na fonte primária citada em cada ficha. "a.v." = a verific
 
 Outros recursos mencionados nas fichas, sem ficha própria: CEFET/RJ-Libras (24 sinais, 20 pessoas, 547 vídeos, segundo [SBrT 2021](https://biblioteca.sbrt.org.br/articlefile/2860.pdf), fonte secundária) e Libras91 (configurações de mão, ver [lswh100.md](lswh100.md)).
 
+## Preparação local e proveniência
+
+O estado dos dados em `LIBRAS_DATA_ROOT` é reproduzível do zero com um único comando:
+
+```bash
+LIBRAS_DATA_ROOT=/mnt/hd1tb/libras-data scripts/prepare_data.sh
+```
+
+O script executa, nesta ordem:
+
+1. **Download:** `scripts/download_libras_datasets.py`, com checksum por arquivo e um `MANIFEST.json` por dataset.
+2. **Extração:** `scripts/extract_zip_lenient.py`, que verifica o CRC de todos os arquivos, inclusive dos que já existiam.
+3. **Registro canônico:** `python -m libras.registry build` e `validate`.
+
+Os passos são idempotentes. Cada operação, inclusive quando roda isolada, acrescenta uma linha a `LIBRAS_DATA_ROOT/PROVENANCE.jsonl`, com data, commit (e se a árvore estava suja), comando, entradas, saídas e resultado. As operações anteriores a 2026-10-27 estão no log marcadas como `"retroactive": true`.
+
+As tabelas curadas (glosas e mapeamento de rótulos) vêm do git, em `metadata/registry/`. Uma correção de rótulo é um commit nessas tabelas, não uma edição nos dados.
+
 ## Modelo de ficha
 
 ```markdown

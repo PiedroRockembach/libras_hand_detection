@@ -14,6 +14,7 @@ Abordagem atual: vídeo → landmarks MediaPipe (mãos + pose + face parcial) �
 2. **Status dos ADRs:** `Proposta` até o pesquisador (Piedro) aprovar explicitamente; só então `Aceita`. Não marque `Aceita` por conta própria.
 3. **Ao fim de cada sessão de trabalho**, atualize o diário (`docs/diario/AAAA-MM-DD.md`) e os capítulos afetados de `docs/relatorio/` (use `/fechar-sessao`).
 4. **Reprodutibilidade:** todo experimento roda a partir de um arquivo em `configs/`, com seed fixa, e registra o hash do commit. Nunca reporte um número que não esteja num log de experimento.
+   - **Toda alteração nos dados** (download, extração, conversão, correção de rótulo, exclusão, build do registro) roda por um script versionado, nunca por comando avulso. Ela grava uma entrada em `LIBRAS_DATA_ROOT/PROVENANCE.jsonl` (`libras.provenance.log_event`) e entra no procedimento de reprodução `scripts/prepare_data.sh`. Correções de rótulo vão para `metadata/registry/` no git, com o motivo.
 5. **Avaliação independente de sinalizador** (pessoas do teste nunca aparecem no treino). Qualquer exceção precisa de ADR.
 6. **Dados nunca entram no git.** Vídeos, landmarks e checkpoints ficam em `LIBRAS_DATA_ROOT` (fora do OneDrive). Cada dataset tem uma ficha em `docs/datasets/`.
 7. Não invente números, citações ou características de datasets. Se não foi verificado, escreva "a verificar".

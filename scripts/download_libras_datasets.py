@@ -34,6 +34,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from libras.provenance import log_event
+
 CHUNK = 1 << 20
 USER_AGENT = "libras-hand-detection-downloader/1.0"
 HF_REPO = "MALTA-Lab/MALTA_LIBRAS"
@@ -287,6 +290,8 @@ def main() -> int:
             log.exception(name)
         failed |= "OK" not in line.split(":", 1)[1][:4]
         print(line, flush=True)
+        log_event(raw.parent, "download", inputs=[source],
+                  outputs=[f"raw/{name}/MANIFEST.json"], result={"summary": line})
     return 1 if failed else 0
 
 
