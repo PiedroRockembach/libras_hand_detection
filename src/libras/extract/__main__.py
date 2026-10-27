@@ -111,7 +111,8 @@ def _extract_one(sample: dict, root: str, target: str) -> dict:
     try:
         src = Path(root) / sample["path"]
         reader = read_frames_tensor if sample["media"] == "frames_tensor" else read_video
-        lm = _extractor.run(*reader(src))
+        fps = reader(src)[1]
+        lm = _extractor.run(lambda: reader(src)[0], fps)
         tmp = Path(target).with_suffix(".tmp.npz")
         np.savez_compressed(tmp, sample_id=sample["sample_id"], **lm)
         tmp.replace(target)

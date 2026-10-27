@@ -26,3 +26,19 @@ def test_missed_hand_rate_counts_only_visible_wrists():
     assert s["both_hands_rate"] == 0.0
     assert s["face_rate"] == pytest.approx(0.5)
     assert s["ms_per_frame"] == pytest.approx(100.0)
+
+
+def test_crop_mapping_round_trip():
+    from libras.extract.mediapipe_tasks import crop_pixels, head_roi, signing_roi, to_full
+
+    pose = np.zeros((3, N_POSE, 4), np.float32)
+    pose[..., 3] = 1.0
+    pose[:, :, 0], pose[:, :, 1] = 0.5, 0.5
+    pose[1, 15, :2] = (0.4, 0.7)  # a wrist moves in one frame only
+    roi = signing_roi(pose, 0.0)
+    assert roi == pytest.approx((0.4, 0.5, 0.5, 0.7))  # union over all frames
+    assert head_roi(pose, 1.0) == pytest.approx((0.5, 0.5, 0.5, 0.5))
+    assert crop_pixels(np.zeros((100, 200, 3), np.uint8), (0.1, 0.2, 0.6, 0.7)).shape == (50, 100, 3)
+    pts = np.array([[[0.5, 0.5, 0.1]]], np.float32)  # centre of the crop
+    to_full(pts, (0.2, 0.4, 0.6, 0.8), 200, 100)
+    assert pts[0, 0] == pytest.approx((0.4, 0.6, 0.04))

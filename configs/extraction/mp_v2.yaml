@@ -1,0 +1,32 @@
+# Landmark extraction, version 2 (ADR-0012): as mp_v1, plus pose-guided crops for hands and face. The cache goes to landmarks/<version>/.
+# Changing anything here requires a new version name: the extractor refuses to mix outputs
+# of different settings, models or MediaPipe versions in one directory.
+version: mp_v2
+
+models:  # MediaPipe Tasks model bundles; pinned URLs, SHA-256 recorded in the manifest
+  hand: https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+  pose: https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task
+  face: https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+
+hand:
+  num_hands: 2
+  min_hand_detection_confidence: 0.5
+  min_hand_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+pose:
+  min_pose_detection_confidence: 0.5
+  min_pose_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+face:
+  min_face_detection_confidence: 0.5
+  min_face_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+
+# Frame rate assumed for media without timing information (MALTA tensors).
+default_fps: 30.0
+
+# Pose runs on the full frame; hands and face run on fixed per-sample crops derived from it
+# (mp_v1 pilot: hands missed in 36% of visible-wrist frames and 0% faces on MINDS Canon).
+crop:
+  signing_margin: 0.25  # signing-space box (pose points 0-22, union over the sample) + 25% per side
+  head_scale: 1.0       # head box (pose points 0-10) enlarged by 100% per side

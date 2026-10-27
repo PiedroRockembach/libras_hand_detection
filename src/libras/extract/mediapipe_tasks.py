@@ -9,7 +9,7 @@ that happens at load time.
 from __future__ import annotations
 
 import time
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 
 import cv2
@@ -67,30 +67,41 @@ class Extractor:
                 base_options=base("face"), running_mode=mode, num_faces=1, **cfg["face"])),
         )
 
-    def run(self, frames: Iterator[np.ndarray], fps: float) -> dict[str, np.ndarray]:
+    def run(self, open_frames: Callable[[], Iterator[np.ndarray]], fps: float
+            ) -> dict[str, np.ndarray]:
         """Extract every frame. Landmarkers are created per sample: VIDEO mode needs
-        increasing timestamps, and tracking must not leak from one sample to the next."""
+        increasing timestamps, and tracking must not leak from one sample to the next.
+
+        With `crop` in the config, a first pass runs pose on the full frame; hands and face
+        then run on fixed per-sample crops (signing space, head) derived from it, and their
+        coordinates are mapped back to the full frame.
+        """
         rows: dict[str, list] = {k: [] for k in (
             "hands", "hands_world", "hand_score", "pose", "pose_world", "face")}
         fps = fps or self.cfg["default_fps"]
-        height = width = 0
-        hand, pose, face = (cls.create_from_options(opt) for cls, opt in self.options)
+        crop = self.cfg.get("crop")
+        size = [0, 0]  # width, height
         start = time.perf_counter()
-        try:
-            for i, rgb in enumerate(frames):
-                height, width = rgb.shape[:2]
-                image = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(rgb))
-                ts = round(i * 1000.0 / fps)
-                self._hands(hand.detect_for_video(image, ts), rows)
-                self._pose(pose.detect_for_video(image, ts), rows)
-                self._face(face.detect_for_video(image, ts), rows)
-        finally:
-            for task in (hand, pose, face):
-                task.close()
+        if not crop:
+            self._pass(open_frames(), fps, rows, size, ("hand", "pose", "face"))
+        else:
+            self._pass(open_frames(), fps, rows, size, ("pose",))
+            if not rows["pose"]:
+                raise ValueError("no frames decoded")
+            pose_arr = np.asarray(rows["pose"], np.float32)
+            rois = {"hand": signing_roi(pose_arr, crop["signing_margin"]),
+                    "face": head_roi(pose_arr, crop["head_scale"])}
+            self._pass(open_frames(), fps, rows, size, ("hand", "face"), rois)
         elapsed = time.perf_counter() - start
         if not rows["pose"]:
             raise ValueError("no frames decoded")
         out = {k: np.asarray(v, dtype=np.float32) for k, v in rows.items()}
+        width, height = size
+        if crop:
+            to_full(out["hands"], rois["hand"], width, height)
+            to_full(out["face"], rois["face"], width, height)
+            out["hand_roi"] = np.asarray(rois["hand"], np.float32)
+            out["face_roi"] = np.asarray(rois["face"], np.float32)
         out["hand_present"] = ~np.isnan(out["hands"][..., 0, 0])
         out["pose_present"] = ~np.isnan(out["pose"][:, 0, 0])
         out["face_present"] = ~np.isnan(out["face"][:, 0, 0])
@@ -98,6 +109,25 @@ class Extractor:
         out["frame_size"] = np.array([width, height], dtype=np.int32)
         out["extract_seconds"] = np.float32(elapsed)
         return out
+
+    def _pass(self, frames: Iterator[np.ndarray], fps: float, rows: dict, size: list,
+              tasks: tuple[str, ...], rois: dict | None = None) -> None:
+        """Run the named tasks over all frames; with rois, each task sees its own crop."""
+        options = dict(zip(("hand", "pose", "face"), self.options, strict=True))
+        running = {t: options[t][0].create_from_options(options[t][1]) for t in tasks}
+        handlers = {"hand": self._hands, "pose": self._pose, "face": self._face}
+        try:
+            for i, rgb in enumerate(frames):
+                size[1], size[0] = rgb.shape[:2]
+                ts = round(i * 1000.0 / fps)
+                for t, task in running.items():
+                    img = rgb if not rois else crop_pixels(rgb, rois[t])
+                    image = mp.Image(image_format=mp.ImageFormat.SRGB,
+                                     data=np.ascontiguousarray(img))
+                    handlers[t](task.detect_for_video(image, ts), rows)
+        finally:
+            for task in running.values():
+                task.close()
 
     @staticmethod
     def _hands(res, rows: dict) -> None:
@@ -135,6 +165,55 @@ class Extractor:
         if res.face_landmarks:
             pts[:] = [(p.x, p.y, p.z) for p in res.face_landmarks[0]]
         rows["face"].append(pts)
+
+
+# Pose landmarks spanning the signing space (face, shoulders, elbows, wrists, hand points).
+SIGNING_POINTS = list(range(23))
+HEAD_POINTS = list(range(11))
+MIN_VIS = 0.3
+
+
+def _box(pts: np.ndarray) -> tuple[float, float, float, float] | None:
+    ok = pts[..., 3] > MIN_VIS
+    if not ok.any():
+        return None
+    xy = pts[..., :2][ok]
+    return float(xy[:, 0].min()), float(xy[:, 1].min()), float(xy[:, 0].max()), float(xy[:, 1].max())
+
+
+def _expand(box, fx: float, fy: float) -> tuple[float, float, float, float]:
+    x0, y0, x1, y1 = box
+    w, h = x1 - x0, y1 - y0
+    return (max(0.0, x0 - fx * w), max(0.0, y0 - fy * h), min(1.0, x1 + fx * w),
+            min(1.0, y1 + fy * h))
+
+
+def signing_roi(pose: np.ndarray, margin: float) -> tuple[float, float, float, float]:
+    """Union over the sample of the signing-space points, plus a margin on each side."""
+    box = _box(pose[:, SIGNING_POINTS])
+    return _expand(box, margin, margin) if box else (0.0, 0.0, 1.0, 1.0)
+
+
+def head_roi(pose: np.ndarray, scale: float) -> tuple[float, float, float, float]:
+    """Union over the sample of the head points, enlarged so the face fills the crop."""
+    box = _box(pose[:, HEAD_POINTS])
+    return _expand(box, scale, scale) if box else (0.0, 0.0, 1.0, 1.0)
+
+
+def crop_pixels(rgb: np.ndarray, roi) -> np.ndarray:
+    h, w = rgb.shape[:2]
+    x0, y0, x1, y1 = roi
+    return rgb[int(y0 * h):max(int(y1 * h), int(y0 * h) + 1),
+               int(x0 * w):max(int(x1 * w), int(x0 * w) + 1)]
+
+
+def to_full(points: np.ndarray, roi, width: int, height: int) -> None:
+    """In place: crop-normalized (x, y, z) -> full-frame normalized. z follows x's scale."""
+    x0, y0, x1, y1 = roi
+    cw, ch = (x1 - x0), (y1 - y0)
+    points[..., 0] = points[..., 0] * cw + x0
+    points[..., 1] = points[..., 1] * ch + y0
+    points[..., 2] = points[..., 2] * cw
 
 
 def detection_stats(lm: dict[str, np.ndarray], wrist_visibility: float = 0.5,
