@@ -31,6 +31,9 @@ Abordagem atual: vídeo → landmarks MediaPipe (mãos + pose + face parcial) �
 | Caminho | Conteúdo |
 |---|---|
 | `src/libras/` | Código do pacote (extração, features, modelos, treino, avaliação, demo) |
+| `src/libras/registry/` | Registro canônico de dados (ADR-0010): esquema, adaptadores por fonte, `python -m libras.registry` |
+| `metadata/registry/` | Tabelas curadas do registro (fontes, glosas, mapeamento de rótulos), versionadas (ADR-0011) |
+| `scripts/` | Download dos datasets e extração de ZIPs com offsets defeituosos |
 | `configs/` | Configurações YAML de extração e experimentos |
 | `docker/`, `.devcontainer/`, `compose.yaml` | Ambiente em container |
 | `docs/relatorio/` | Relatório vivo, um arquivo por capítulo |
