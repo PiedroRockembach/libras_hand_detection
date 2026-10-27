@@ -25,7 +25,7 @@ Cada linha é um sinal ou uma frase dos datasets que usamos. Os nomes vieram dos
 | `glosa_corrigida` | Preencha **só se** a glosa atual estiver errada ou mal escrita (ex.: `MACA` → `MAÇÃ`) |
 | `tipo_corrigido` | Preencha **só se** o tipo estiver errado. `sinal` = um único sinal; `frase` = mais de um sinal. Exemplo: `NÃO SEI` está como frase, mas pode ser um sinal único |
 | `variante_regional` | Se o sinal do vídeo for uma variante regional, indique qual (se souber) |
-| `observacoes` | Qualquer coisa útil, por exemplo "BANCO aqui é banco de dinheiro" |
+| `observacoes` | Qualquer coisa útil, por exemplo "BANCO aqui é banco de dinheiro". **Se a linha estiver toda correta, escreva `OK`.** Assim sabemos que ela foi conferida, e não esquecida |
 
 ## Tarefa 2: sequência de sinais das frases (`anotacao_frases.csv`, 131 linhas)
 

@@ -137,8 +137,25 @@ SAMPLES = Table(
     ),
 )
 
-TABLES: dict[str, Table] = {t.name: t for t in (SOURCES, GLOSSES, LABEL_MAP, SIGNERS, SAMPLES)}
+PHRASE_GLOSSES = Table(
+    name="phrase_glosses",
+    columns=(
+        Column("gloss_id", required=True, unique=True),  # the phrase
+        Column("sequence", required=True),  # space-separated sign gloss_ids, in signing order
+        Column("sequence_text", required=True),  # as annotated, e.g. "EU QUERER PAGAR P-I-X"
+        Column("complete", required=True, choices=("yes", "no")),  # "no" when it contains "?"
+        Column("annotator", required=True),
+        Column("kit", required=True),
+        Column("notes"),
+    ),
+    key=("gloss_id",),
+    foreign_keys=(ForeignKey("gloss_id", "glosses", "gloss_id"),),
+)
+
+TABLES: dict[str, Table] = {
+    t.name: t for t in (SOURCES, GLOSSES, LABEL_MAP, PHRASE_GLOSSES, SIGNERS, SAMPLES)
+}
 
 # Which tables are curated in git and which are generated into the data root (ADR-0011).
-CURATED = ("sources", "glosses", "label_map")
+CURATED = ("sources", "glosses", "label_map", "phrase_glosses")
 GENERATED = ("signers", "samples")

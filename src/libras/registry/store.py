@@ -82,6 +82,11 @@ def validate(reg: Registry) -> list[str]:
                 v = row.get(fk.column, "")
                 if v and v not in targets:
                     errors.append(f"{name}:{i}: {fk.column}={v!r} not found in {fk.table}")
+    units = {g["gloss_id"]: g.get("unit") for g in reg.get("glosses", [])}
+    for i, row in enumerate(reg.get("phrase_glosses", []), start=2):
+        for gid in row.get("sequence", "").split():
+            if units.get(gid) != "sign":
+                errors.append(f"phrase_glosses:{i}: sequence item {gid!r} is not a sign gloss")
     return errors
 
 
