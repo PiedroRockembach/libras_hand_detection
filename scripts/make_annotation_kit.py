@@ -10,7 +10,8 @@ The guide (docs/anotacao/GUIA_DE_ANOTACAO.md) is copied in as well. CSVs are UTF
 spreadsheet programs open the accents correctly. Deterministic; logs to PROVENANCE.jsonl.
 
 Usage:
-    python3 scripts/make_annotation_kit.py --name kit-v1 [--data-root PATH]
+    python3 scripts/make_annotation_kit.py --name kit-v2 [--data-root PATH]
+    python3 scripts/make_annotation_kit.py --name kit-v1 --discard "reason"   # undelivered kits only
 """
 
 from __future__ import annotations
@@ -64,11 +65,21 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--name", required=True)
     p.add_argument("--data-root", type=Path, default=os.environ.get("LIBRAS_DATA_ROOT"))
+    p.add_argument("--discard", metavar="REASON",
+                   help="delete the (undelivered) kit --name instead of building it, logging REASON")
     args = p.parse_args()
     if not args.data_root:
         p.error("set --data-root or LIBRAS_DATA_ROOT")
     root = args.data_root.resolve()
     out = root / "annotation" / args.name
+    if args.discard:
+        if not out.is_dir():
+            p.error(f"{out} does not exist")
+        shutil.rmtree(out)
+        print(f"discarded {out}")
+        log_event(root, "annotation.discard_kit", inputs=[str(out.relative_to(root))], outputs=[],
+                  result={"reason": args.discard})
+        return 0
     if out.exists():
         p.error(f"{out} already exists; kits are immutable, use a new --name")
 
@@ -79,12 +90,12 @@ def main() -> int:
     labels = defaultdict(set)
     for r in label_map:
         labels[r["gloss_id"]].add(f'{r["source_id"]}: {r["source_label"]}')
-    by_gloss, conflicts = defaultdict(list), defaultdict(int)
+    by_gloss, conflicted = defaultdict(list), defaultdict(list)
     for s in samples:
-        if "label_conflict" in s["quality_flags"]:
-            conflicts[s["gloss_id"]] += 1
-        elif s["media"] == "video":
-            by_gloss[s["gloss_id"]].append(s)
+        if s["media"] != "video":
+            continue
+        (conflicted if "label_conflict" in s["quality_flags"] else by_gloss)[s["gloss_id"]].append(s)
+    conflicts = {gid: len(v) for gid, v in conflicted.items()}
 
     (out / "clips").mkdir(parents=True)
     origin, review_rows, phrase_rows = [], [], []
@@ -92,7 +103,9 @@ def main() -> int:
         gid, unit = g["gloss_id"], g["unit"]
         n = PHRASE_EXAMPLES if unit == "phrase" else SIGN_EXAMPLES
         clips = []
-        for i, s in enumerate(pick_examples(by_gloss[gid], n), start=1):
+        # Glosses whose every video is in conflict still need examples so the annotator can judge.
+        pool = by_gloss[gid] or conflicted[gid]
+        for i, s in enumerate(pick_examples(pool, n), start=1):
             src = root / s["path"]
             name = f"{gid}_{slug(g['gloss'])}_{i}{src.suffix}"
             shutil.copy2(src, out / "clips" / name)
@@ -100,12 +113,14 @@ def main() -> int:
             origin.append([f"clips/{name}", s["sample_id"], s["path"]])
         clips += [""] * (n - len(clips))
         note = (f"ATENÇÃO: {conflicts[gid]} vídeos desta glosa são idênticos aos de outra glosa; "
-                "dizer qual rótulo está correto" if conflicts[gid] else "")
+                "dizer qual rótulo está correto" if conflicts.get(gid) else "")
+        if not by_gloss[gid] and conflicts.get(gid):
+            note += " (os exemplos abaixo são desses vídeos em conflito)"
         review_rows.append([gid, g["gloss"], "sinal" if unit == "sign" else "frase",
                             " | ".join(sorted(labels[gid])), clips[0], clips[1], note,
                             "", "", "", ""])
         if unit == "phrase":
-            phrase_rows.append([gid, g["gloss"], str(len(by_gloss[gid])), *clips[:3], note, "", ""])
+            phrase_rows.append([gid, g["gloss"], str(len(pool)), *clips[:3], note, "", ""])
 
     write_csv(out / "revisao_glosas.csv",
               ["gloss_id", "glosa_atual", "tipo_atual", "rotulos_originais", "video_1", "video_2",
