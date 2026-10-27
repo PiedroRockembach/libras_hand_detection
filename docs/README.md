@@ -25,3 +25,4 @@
 | [0011](decisoes/0011-local-do-registro-de-dados.md) | Onde vive o registro de dados | Aceita |
 | [0012](decisoes/0012-cache-de-landmarks-brutos.md) | Cache de landmarks brutos, com normalização no carregamento | Aceita |
 | [0013](decisoes/0013-vocabulario-alvo-signbank.md) | Vocabulário-alvo baseado no Signbank da Libras (UFSC) | Aceita |
+| [0014](decisoes/0014-plano-de-treinamento-e-melhoria-continua.md) | Plano de treinamento: sinais isolados, sequências de sinais e melhoria contínua | Aceita |

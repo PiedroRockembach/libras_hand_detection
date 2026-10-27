@@ -47,7 +47,19 @@ Avaliação de viabilidade por objetivo do ADR-0009:
 
 ## 3.4 Modelos
 
-*Fases 3–4.* Progressão planejada: MLP sobre estatísticas da sequência → GRU bidirecional → transformer / grafo espaço-temporal.
+*Fases 3–4; plano no ADR-0014.* Progressão planejada: MLP sobre estatísticas da sequência (sanidade) → GRU → transformer / grafo espaço-temporal.
+
+O codificador produz uma saída **por quadro**, e duas cabeças compartilham os pesos:
+
+- **sinais isolados:** pooling temporal → *embedding* → classificador de cosseno com pesos inicializados por protótipos, o que permite adicionar sinais novos sem retreino;
+- **sequências de sinais:** classificação por quadro sobre o vocabulário + *blank*, treinada com CTC sobre sequências de glosas. Isso permite reconhecer frases e identificar a passagem de um sinal para o outro.
+
+Dados de sequência:
+
+- as 131 frases do LIBRAS-EQT-UECE, anotadas com glosas de Libras por uma pessoa fluente (o dataset traz só o texto em português);
+- frases sintéticas montadas pela concatenação de sinais isolados, usadas só como aumento de dados.
+
+A versão de tempo real usa codificador causal ou com *lookahead* limitado. Cada versão do modelo é retreinada do zero sobre um *snapshot* do registro e avaliada em conjuntos de teste fixos: LOSO, MALTA, webcam e WER nas frases.
 
 ## 3.5 Protocolo de avaliação
 
