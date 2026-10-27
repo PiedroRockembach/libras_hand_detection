@@ -1,0 +1,6 @@
+source_id,name,version,url,license,redistribution,commercial_use,datasheet
+eqt_uece,LIBRAS-EQT-UECE,v4,https://zenodo.org/records/21398895,CC-BY-NC-4.0,yes,no,docs/datasets/libras-eqt-uece.md
+lswh100,LSWH100,,https://zenodo.org/records/10635628,CC-BY-4.0,yes,yes,docs/datasets/lswh100.md
+malta,MALTA-LIBRAS,,https://huggingface.co/datasets/MALTA-Lab/MALTA_LIBRAS,MIT (aggregate; upstream licenses unknown),unknown,unknown,docs/datasets/malta-libras.md
+minds,MINDS-Libras (Canon RGB),,https://zenodo.org/records/2667329,CC-BY-4.0,yes,yes,docs/datasets/minds-libras.md
+minds_kinect,MINDS-Libras (Kinect v2 RGB-D),,https://zenodo.org/records/4322983,CC-BY-4.0,yes,yes,docs/datasets/minds-libras.md

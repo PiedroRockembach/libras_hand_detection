@@ -17,7 +17,12 @@
   - dos Santos et al. (2026, aceito no IEEE SAS 2026): **0,94 ± 0,04** de acurácia e 0,94 ± 0,05 de F1 com landmarks MediaPipe (subconjunto "ASL-2nd"), em **LOPO aninhado (independente de sinalizador)**. Com todos os 543 landmarks, a acurácia cai para 0,70 ± 0,07 ([arXiv:2510.24887](https://arxiv.org/html/2510.24887v4), Tabelas 1 e 2).
   - A mesma tabela atribui 0,93 ± 0,05 a Alves et al. (2024) em LOPO, 0,91 ± 0,07 a De Castro et al. (2024) em LOPO e 0,97 ± 0,01 a Naz et al. (2025) **sem** LOPO ([arXiv:2510.24887](https://arxiv.org/html/2510.24887v4)). São números citados por terceiros; conferir nos originais antes de usar.
   - Validação em domínio contra teste fora de domínio: modelos 3D-CNN chegam a 0,98–1,00 na validação MINDS, feita com **divisão estratificada 75/25 por classe, dependente de sinalizador**, e caem para 0,14–0,46 no MALTA-LIBRAS ([Lazzarotto et al., 2025](https://doi.org/10.5753/eramiars.2025.16773)).
-- **Status no projeto:** candidato.
+- **Status no projeto:** adotado como dataset principal (ADR-0009). No registro: fontes `minds` (Canon) e `minds_kinect` (Kinect).
+- **Inventário local (2026-10-24, `python -m libras.registry build`):**
+  - **Canon RGB (Zenodo 2667329):** **1.158 vídeos efetivos**, não 1.200. Por sinalizador: 100, exceto S03 = 85, S04 = 95, S07 = 103 e S09 = 75. Por sinal: 55 a 62. Todos 1920×1080, ~30,2 fps (o valor varia levemente entre arquivos), de 71 a 233 quadros (mediana 139).
+  - **Kinect v2 (Zenodo 4322983):** 1.200 amostras completas (RGB, Depth, Body e Face). RGB 1920×1080 a 30 fps, **todas com exatamente 150 quadros** (5 s, duração fixa da captura). Se os vídeos do Kinect e da Canon são tomadas simultâneas da mesma execução: a verificar.
+  - **Os ZIPs da Canon são defeituosos:** acima de 4 GB, os offsets foram gravados sem ZIP64 (macOS), e `unzip`, `bsdtar` e `zipfile` falham. A extração usa `scripts/extract_zip_lenient.py`, que valida o CRC de cada arquivo.
+  - Nenhum vídeo ilegível e nenhuma duplicata exata.
 - **Observações:**
   - O ambiente é muito controlado (chroma key, câmera e iluminação fixas). Há evidência direta de que modelos treinados só nele não generalizam ([Lazzarotto et al., 2025](https://doi.org/10.5753/eramiars.2025.16773)).
   - Só 20 sinais, todos lexicais. Não traz alfabeto datilológico isolado, mas inclui "Cinco" (número).

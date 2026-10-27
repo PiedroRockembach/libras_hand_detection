@@ -10,11 +10,13 @@ Sinais estáticos e dinâmicos são tratados de forma unificada, como sequência
 
 ## 3.2 Dados
 
-*A definir na Fase 1 (ver [docs/datasets/](../datasets/)).*
+*ADR-0009 (Aceita) e ADR-0008 (Proposta).* Datasets de Libras de acesso aberto baixados: MINDS-Libras (principal), LIBRAS-EQT-UECE, MALTA-LIBRAS (teste fora de domínio, formato a verificar) e LSWH100 (configurações de mão). Ver [docs/datasets/](../datasets/).
+
+Todas as fontes são integradas por um **registro canônico** (ADR-0010): tabelas de fontes, vocabulário de glosas, mapeamento de rótulos, sinalizadores e amostras, preenchidas por um adaptador por fonte. Licença e consentimento são registrados por amostra. A divisão treino/teste agrupa por sinalizador mesmo entre fontes diferentes. Um **vocabulário-alvo** baseado no Signbank da Libras (ADR-0013) permite medir as lacunas de vocabulário e de diversidade.
 
 ## 3.3 Extração e pré-processamento
 
-*Fase 2.*
+*Fase 2.* O cache guarda os landmarks brutos do MediaPipe (todos os pontos, fps original, máscara de detecção), um arquivo por amostra e versionado pelo extrator. Seleção de pontos, normalização, reamostragem e aumento de dados são aplicados no carregamento, configurados em YAML (ADR-0012).
 
 ## 3.4 Modelos
 

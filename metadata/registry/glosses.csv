@@ -1,0 +1,196 @@
+gloss_id,gloss,unit,variant,signbank_ref,ines_ref,notes
+G00001,ACONTECER,sign,,,,auto from minds; review
+G00002,ALUNO,sign,,,,auto from minds; review
+G00003,AMARELO,sign,,,,auto from minds; review
+G00004,AMÉRICA,sign,,,,auto from minds (file name without accents); review
+G00005,APROVEITAR,sign,,,,auto from minds; review
+G00006,BALA,sign,,,,auto from minds; review
+G00007,BANCO,sign,,,,auto from minds; ambiguous in Portuguese (bank or bench) - check the MINDS sign; review
+G00008,BANHEIRO,sign,,,,auto from minds; review
+G00009,BARULHO,sign,,,,auto from minds; review
+G00010,CINCO,sign,,,,auto from minds; review
+G00011,CONHECER,sign,,,,auto from minds; review
+G00012,ESPELHO,sign,,,,auto from minds; review
+G00013,ESQUINA,sign,,,,auto from minds; review
+G00014,FILHO,sign,,,,auto from minds; review
+G00015,MAÇÃ,sign,,,,auto from minds (file name without accents); review
+G00016,MEDO,sign,,,,auto from minds; review
+G00017,RUIM,sign,,,,auto from minds; review
+G00018,SAPO,sign,,,,auto from minds; review
+G00019,VACINA,sign,,,,auto from minds; review
+G00020,VONTADE,sign,,,,auto from minds; review
+G00021,A ENERGIA CAIU NA CASA TODA,phrase,,,,auto from eqt_uece; review
+G00022,A ENERGIA ESTÁ OSCILANDO HÁ MAIS DE SETE DIAS,phrase,,,,auto from eqt_uece; review
+G00023,A LUZ CAIU EM ALGUNS CÔMODOS,phrase,,,,auto from eqt_uece; review
+G00024,A LUZ OSCILOU POR MAIS DE SETE DIAS,phrase,,,,auto from eqt_uece; review
+G00025,AINDA,sign,,,,auto from eqt_uece; review
+G00026,ANTERIOR,sign,,,,auto from eqt_uece; review
+G00027,AVANÇAR,sign,,,,auto from eqt_uece; review
+G00028,ALGUNS,sign,,,,auto from eqt_uece; review
+G00029,ALTERAR O DIA DA FATURA,phrase,,,,auto from eqt_uece; review
+G00030,ATUALIZAR DATA DE VENCIMENTO DA MINHA FATURA,phrase,,,,auto from eqt_uece; review
+G00031,COMUM,sign,,,,auto from eqt_uece; review
+G00032,CPF OU NÚMERO DA CONTA,phrase,,,,auto from eqt_uece; review
+G00033,CADASTRAR CONTA DIGITAL,phrase,,,,auto from eqt_uece; review
+G00034,CADASTRAR MEU WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00035,CADASTRAR UM E-MAIL,phrase,,,,auto from eqt_uece; review
+G00036,CADASTRAR,sign,,,,auto from eqt_uece; review
+G00037,CAIR,sign,,,,auto from eqt_uece; review
+G00038,CAIU UM RAIO,phrase,,,,auto from eqt_uece; review
+G00039,CASA TODA,phrase,,,,auto from eqt_uece; review
+G00040,CONTA ESTÁ PAGA,phrase,,,,auto from eqt_uece; review
+G00041,CÔMODO,sign,,,,auto from eqt_uece; review
+G00042,DATA,sign,,,,auto from eqt_uece; review
+G00043,DESEJO CADASTAR MEU E-MAIL,phrase,,,,auto from eqt_uece; review
+G00044,DESEJO CADASTRAR MEU WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00045,DESEJO DO MÊS DE,phrase,,,,auto from eqt_uece; review
+G00046,DESEJO MUDAR PARA O DIA 30,phrase,,,,auto from eqt_uece; review
+G00047,DEZ,sign,,,,auto from eqt_uece; review
+G00048,DIA 01,phrase,,,,auto from eqt_uece; review
+G00049,DIA 10,phrase,,,,auto from eqt_uece; review
+G00050,DIA 15,phrase,,,,auto from eqt_uece; review
+G00051,DIA 30,phrase,,,,auto from eqt_uece; review
+G00052,DIGITAL,sign,,,,auto from eqt_uece; review
+G00053,ENERGIA ESTÁ INSTÁVEL,phrase,,,,auto from eqt_uece; review
+G00054,ENERGIA OSCILANDO,phrase,,,,auto from eqt_uece; review
+G00055,ENERGIA,sign,,,,auto from eqt_uece; review
+G00056,ESCOLHER OUTRO DIA,phrase,,,,auto from eqt_uece; review
+G00057,ESCOLHER VENCIMENTO PARA O DIA 01,phrase,,,,auto from eqt_uece; review
+G00058,ESCOLHER VENCIMENTO PARA O DIA 10,phrase,,,,auto from eqt_uece; review
+G00059,ESCOLHER VENCIMENTO PARA O DIA 15,phrase,,,,auto from eqt_uece; review
+G00060,ESCOLHER VENCIMENTO PARA O DIA 30,phrase,,,,auto from eqt_uece; review
+G00061,ESTÁ ERRADO,phrase,,,,auto from eqt_uece; review
+G00062,ESTÁ FALTANDO ENERGIA SOMENTE NA MINHA CASA,phrase,,,,auto from eqt_uece; review
+G00063,EU DESEJO MINHA DE ENERGIA DE VOLTA,phrase,,,,auto from eqt_uece; review
+G00064,EU DESEJO MINHA LUZ DE VOLTA,phrase,,,,auto from eqt_uece; review
+G00065,EU ESTOU COM A ENERGIA OSCILANDO,phrase,,,,auto from eqt_uece; review
+G00066,EU ESTOU COM A LUZ OSCILANDO,phrase,,,,auto from eqt_uece; review
+G00067,EU ESTOU SEM ENERGIA,phrase,,,,auto from eqt_uece; review
+G00068,EU ESTOU SEM LUZ,phrase,,,,auto from eqt_uece; review
+G00069,EU JÁ PAGUEI A CONTA DO MÊS DE,phrase,,,,auto from eqt_uece; review
+G00070,EU JÁ PAGUEI TODAS AS CONTAS,phrase,,,,auto from eqt_uece; review
+G00071,EU JÁ PAGUEI TUDO,phrase,,,,auto from eqt_uece; review
+G00072,EU NÃO PAGUEI,phrase,,,,auto from eqt_uece; review
+G00073,EU QUERO A LUZ DE VOLTA,phrase,,,,auto from eqt_uece; review
+G00074,EU QUERO CADASTRAR MEU WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00075,EU QUERO CADASTRAR MEU E-MAIL,phrase,,,,auto from eqt_uece; review
+G00076,EU QUERO CONSULTAR OS DETALHES DA FATURA DE,phrase,,,,auto from eqt_uece; review
+G00077,EU QUERO IMPRIMIR A 2ª VIA SIMPLIFICADA,phrase,,,,auto from eqt_uece; review
+G00078,EU QUERO MINHA ENERGIA LIGADA,phrase,,,,auto from eqt_uece; review
+G00079,EU QUERO PAGAR A CONTA,phrase,,,,auto from eqt_uece; review
+G00080,EU QUERO PAGAR AS MINHAS FATURAS EM ABERTO,phrase,,,,auto from eqt_uece; review
+G00081,EU QUERO PAGAR COM O CARTÃO DE CRÉDITO,phrase,,,,auto from eqt_uece; review
+G00082,EU QUERO PAGAR COM O CARTÃO DE DÉBITO,phrase,,,,auto from eqt_uece; review
+G00083,EU QUERO PAGAR COM O PIX,phrase,,,,auto from eqt_uece; review
+G00084,EU QUERO PAGAR TODAS AS MINHAS FATURAS EM ABERTO,phrase,,,,auto from eqt_uece; review
+G00085,EU QUERO QUE LIGUEM MINHA LUZ,phrase,,,,auto from eqt_uece; review
+G00086,EU QUERO RECEBER A 2ª VIA POR E-MAIL,phrase,,,,auto from eqt_uece; review
+G00087,EU QUERO REGISTRAR A FALTA DE ENERGIA,phrase,,,,auto from eqt_uece; review
+G00088,EU QUERO REGISTRAR A FALTA DE LUZ,phrase,,,,auto from eqt_uece; review
+G00089,EU QUERO SOLICITAR A RELIGAÇÃO DA ENERGIA,phrase,,,,auto from eqt_uece; review
+G00090,EU QUERO VER,phrase,,,,auto from eqt_uece; review
+G00091,FALTAR,sign,,,,auto from eqt_uece; review
+G00092,FALTOU ENERGIA EM TODA A MINHA RUA,phrase,,,,auto from eqt_uece; review
+G00093,FALTOU ENERGIA,phrase,,,,auto from eqt_uece; review
+G00094,HAVER,sign,,,,auto from eqt_uece; review
+G00095,INFORMAR,sign,,,,auto from eqt_uece; review
+G00096,INSTÁVEL,sign,,,,auto from eqt_uece; review
+G00097,INTERVENÇÃO,sign,,,,auto from eqt_uece; review
+G00098,IR PARA O FIM,phrase,,,,auto from eqt_uece; review
+G00099,JÁ,sign,,,,auto from eqt_uece; review
+G00100,JÁ PAGUEI AS FATURAS,phrase,,,,auto from eqt_uece; review
+G00101,LUZ OSCILANDO,phrase,,,,auto from eqt_uece; review
+G00102,LUZ,sign,,,,auto from eqt_uece; review
+G00103,MAIS,sign,,,,auto from eqt_uece; review
+G00104,MENOS,sign,,,,auto from eqt_uece; review
+G00105,MESMO,sign,,,,auto from eqt_uece; review
+G00106,MINHA ENERGIA ESTÁ FRACA,phrase,,,,auto from eqt_uece; review
+G00107,MINHA LUZ ESTÁ FRACA,phrase,,,,auto from eqt_uece; review
+G00108,MODIFICAR CONTA DIGITAL,phrase,,,,auto from eqt_uece; review
+G00109,MOTIVO,sign,,,,auto from eqt_uece; review
+G00110,MUDAR A FORMA DE PAGAMENTO,phrase,,,,auto from eqt_uece; review
+G00111,MUDAR DATA DE VENCIMENTO DA FATURA,phrase,,,,auto from eqt_uece; review
+G00112,"NÃO QUERO, OBRIGADO",phrase,,,,auto from eqt_uece; review
+G00113,NÃO QUERO,phrase,,,,auto from eqt_uece; review
+G00114,NÃO SEI,phrase,,,,auto from eqt_uece; review
+G00115,NÃO TEM ENERGIA EM CASA,phrase,,,,auto from eqt_uece; review
+G00116,NÃO É MAIS O MEU E-MAIL,phrase,,,,auto from eqt_uece; review
+G00117,"NÃO, OBRIGADO",phrase,,,,auto from eqt_uece; review
+G00118,"NÃO, AINDA EXISTEM CONTAS ABERTAS",phrase,,,,auto from eqt_uece; review
+G00119,"NÃO, EU NÃO QUERO",phrase,,,,auto from eqt_uece; review
+G00120,"NÃO, NÃO QUERO MUDAR",phrase,,,,auto from eqt_uece; review
+G00121,"OI, EU DESEJO ALTERAR A DATA DE VENCIMENTO DA MINHA CONTA",phrase,,,,auto from eqt_uece; review
+G00122,"OI, EU DESEJO ALTERAR MINHA CONTA DIGITAL",phrase,,,,auto from eqt_uece; review
+G00123,"OI, EU QUERO ALTERAR A DATA DE VENCIMENTO DA MINHA FATURA",phrase,,,,auto from eqt_uece; review
+G00124,"OI, EU QUERO ALTERAR MINHA CONTA DIGITAL",phrase,,,,auto from eqt_uece; review
+G00125,"OI, EU QUERO CADASTRAR MINHA CONTA DIGITAL",phrase,,,,auto from eqt_uece; review
+G00126,"OI, EU QUERO CONSULTAR MEU HISTÓRICO DE FATURAMENTO",phrase,,,,auto from eqt_uece; review
+G00127,"OI, EU QUERO CONSULTAR MINHA FATURA",phrase,,,,auto from eqt_uece; review
+G00128,"OI, EU QUERO EMITIR A SEGUNDA VIA DA MINHA FATURA",phrase,,,,auto from eqt_uece; review
+G00129,"OI, EU QUERO RELIGAR MINHA ENERGIA",phrase,,,,auto from eqt_uece; review
+G00130,"OI, EU QUERO RELIGAR MINHA LUZ",phrase,,,,auto from eqt_uece; review
+G00131,OS FIOS DA REDE QUEBRARAM,phrase,,,,auto from eqt_uece; review
+G00132,OSCILAR,sign,,,,auto from eqt_uece; review
+G00133,PAGO,sign,,,,auto from eqt_uece; review
+G00134,PRÓXIMA,sign,,,,auto from eqt_uece; review
+G00135,PAGAR CONTAS EM ABERTO,phrase,,,,auto from eqt_uece; review
+G00136,PAGUEI A MINHA FATURA,phrase,,,,auto from eqt_uece; review
+G00137,PESSOAS MEXERAM NA REDE,phrase,,,,auto from eqt_uece; review
+G00138,POSTE,sign,,,,auto from eqt_uece; review
+G00139,PRINCIPAL PRAIA CASA,phrase,,,,auto from eqt_uece; review
+G00140,PÁGINA,sign,,,,auto from eqt_uece; review
+G00141,PÁGINA ANTERIOR,phrase,,,,auto from eqt_uece; review
+G00142,QUERO ALTERAR A FORMA DE PAGAMENTO PARA CARTÃO DE CRÉDITO,phrase,,,,auto from eqt_uece; review
+G00143,QUERO ALTERAR A FORMA DE PAGAMENTO PARA CARTÃO DE DÉBITO,phrase,,,,auto from eqt_uece; review
+G00144,QUERO ALTERAR A FORMA DE PAGAMENTO PARA PIX,phrase,,,,auto from eqt_uece; review
+G00145,QUERO MUDAR PARA O DIA 01,phrase,,,,auto from eqt_uece; review
+G00146,QUERO MUDAR PARA O DIA 10,phrase,,,,auto from eqt_uece; review
+G00147,QUERO MUDAR PARA O DIA 15,phrase,,,,auto from eqt_uece; review
+G00148,QUERO MUDAR PARA O DIA 30,phrase,,,,auto from eqt_uece; review
+G00149,QUERO MUDAR,phrase,,,,auto from eqt_uece; review
+G00150,QUERO RECEBER MINHA CONTA PELO WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00151,QUERO RECEBER MINHA FATURA PELO E-MAIL,phrase,,,,auto from eqt_uece; review
+G00152,QUERO RECEBER NO MEU WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00153,QUERO RECEBER NO MEU E-MAIL,phrase,,,,auto from eqt_uece; review
+G00154,QUERO SABER MAIS INFORMAÇÕES SOBRE,phrase,,,,auto from eqt_uece; review
+G00155,QUERO VER MAIS INFORMAÇÕES SOBRE,phrase,,,,auto from eqt_uece; review
+G00156,QUERO,sign,,,,auto from eqt_uece; review
+G00157,QUINZE,sign,,,,auto from eqt_uece; review
+G00158,RAIO,sign,,,,auto from eqt_uece; review
+G00159,RECEBER PELO E-MAIL,phrase,,,,auto from eqt_uece; review
+G00160,RECEBER PELO WHATSAPP,phrase,,,,auto from eqt_uece; review
+G00161,RELIGAR A ENERGIA,phrase,,,,auto from eqt_uece; review
+G00162,RELIGAR A LUZ,phrase,,,,auto from eqt_uece; review
+G00163,RELIGAR COM URGÊNCIA,phrase,,,,auto from eqt_uece; review
+G00164,RELIGAR,sign,,,,auto from eqt_uece; review
+G00165,RELIGAÇÃO COMUM,phrase,,,,auto from eqt_uece; review
+G00166,RUA,sign,,,,auto from eqt_uece; review
+G00167,SOMENTE ALGUNS CÔMODOS,phrase,,,,auto from eqt_uece; review
+G00168,SERVIÇO,sign,,,,auto from eqt_uece; review
+G00169,"SIM, CONFIRMO O PAGAMENTO",phrase,,,,auto from eqt_uece; review
+G00170,"SIM, CONFIRMO",phrase,,,,auto from eqt_uece; review
+G00171,"SIM, ENVIAR PARA O MEU E-MAIL",phrase,,,,auto from eqt_uece; review
+G00172,"SIM, ESTÁ CERTO",phrase,,,,auto from eqt_uece; review
+G00173,"SIM, EU PAGUEI",phrase,,,,auto from eqt_uece; review
+G00174,"SIM, EU QUERO",phrase,,,,auto from eqt_uece; review
+G00175,"SIM, QUERO MUDAR",phrase,,,,auto from eqt_uece; review
+G00176,"SIM, QUERO RECEBER MEU HISTÓRICO DE CONSUMO",phrase,,,,auto from eqt_uece; review
+G00177,SIM,sign,,,,auto from eqt_uece; review
+G00178,SOLICITAR,sign,,,,auto from eqt_uece; review
+G00179,TENTAR NOVAMENTE,phrase,,,,auto from eqt_uece; review
+G00180,TERCEIROS,sign,,,,auto from eqt_uece; review
+G00181,TODA,sign,,,,auto from eqt_uece; review
+G00182,TRINTA,sign,,,,auto from eqt_uece; review
+G00183,URGÊNCIA,sign,,,,auto from eqt_uece; review
+G00184,UM POSTE CAIU,phrase,,,,auto from eqt_uece; review
+G00185,UMA ÁRVORE CAIU,phrase,,,,auto from eqt_uece; review
+G00186,VENCIMENTO,sign,,,,auto from eqt_uece; review
+G00187,VER CONTA DIGITAL,phrase,,,,auto from eqt_uece; review
+G00188,VER OUTRAS CONTAS,phrase,,,,auto from eqt_uece; review
+G00189,VER OUTROS SERVIÇOS,phrase,,,,auto from eqt_uece; review
+G00190,VOLTAR PARA A PRIMEIRA PÁGINA,phrase,,,,auto from eqt_uece; review
+G00191,ALTERAR DATA DE VENCIMENTO,phrase,,,,auto from eqt_uece; review
+G00192,E-MAIL,sign,,,,auto from eqt_uece; review
+G00193,"NÃO, ESTE EMAIL ESTÁ DESATUALIZADO",phrase,,,,auto from eqt_uece; review
+G00194,WHATSAPP,sign,,,,auto from eqt_uece; review
+G00195,ÁRVORE,sign,,,,auto from eqt_uece; review

@@ -10,3 +10,4 @@
 - **Observações:**
   - Interesse principal: se cada entrada traz configuração de mão, locação e movimento anotados, o Signbank vira um **rótulo fonológico por sinal**. Isso é o que a ideia de decompor o reconhecimento em parâmetros (ADR-0001) precisa para escalar o vocabulário. Confirmar quais campos estão disponíveis.
   - Provavelmente tem 1 vídeo por sinal. Serve para *zero/few-shot* e para definir o vocabulário-alvo, não para treino direto.
+  - **2026-10-24:** escolhido como base do vocabulário-alvo, por pedido ao grupo, sem raspagem (ADR-0013). O portal busca os dados numa API separada (`api-signbank.levantelab.com.br`), não tem `robots.txt` nem termos de uso publicados, e a política de privacidade publicada é texto provisório. O painel administrativo referencia vídeos com anotação ELAN (`.eaf`); se elas são públicas e trazem parâmetros fonológicos: **a verificar**.

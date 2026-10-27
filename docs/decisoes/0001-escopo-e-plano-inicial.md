@@ -46,3 +46,5 @@ O código antigo representa pouco esforço a preservar, e uma arquitetura inadeq
 
 - **Escalar até o vocabulário completo** é uma questão de pesquisa em aberto. Com milhares de classes e poucas amostras por sinal, a classificação direta tende a falhar. Uma direção promissora, que pode virar contribuição do artigo, é **decompor o reconhecimento nos parâmetros fonológicos** (configuração de mão, ponto de articulação, movimento, orientação, expressões não-manuais), que são compartilhados entre sinais. Isso será investigado na Fase 1 e decidido em ADR próprio.
 - A licença Apache-2.0 do código original só gera obrigações se algum trecho dele for reaproveitado.
+
+- **Atualização (ADR-0009, Aceita):** o objetivo de 6 meses foi detalhado como POC demonstrável + base de dados extensível. Uma versão mínima da Fase 5 (demo) é antecipada para o mês 2, e a Fase 6 fica restrita à preparação do protocolo de gravação.

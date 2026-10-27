@@ -11,7 +11,13 @@
   - **Landmarks pré-computados:** **sim** (`Landmarks.zip`, CSV ou JSON) ([README](https://zenodo.org/records/21398895/files/README.md?download=1)). O extrator (MediaPipe? qual versão?) está **a verificar.**
 - **Protocolo oficial de avaliação:** o pacote "-T" traz divisões train/dev/test ([README](https://zenodo.org/records/21398895/files/README.md?download=1)); se são independentes de sinalizador está **a verificar**. A biblioteca de terceiros propõe 5 dobras estratificadas por sinalizador (3 treino / 1 validação / 1 teste) ([PyPI](https://pypi.org/pypi/datasets-islr-libras/json)). Não é oficial.
 - **Resultados de referência na literatura:** **a verificar** (nenhuma publicação localizada).
-- **Status no projeto:** candidato.
+- **Status no projeto:** adotado (ADR-0009), só os vídeos RGB. No registro: fonte `eqt_uece`.
+- **Inventário local (2026-10-24, v4):**
+  - **5.347 vídeos, 178 classes, 5 informantes** (1.064 a 1.074 vídeos cada). Cerca de 30 vídeos por classe. Os IDs de classe vão de 1 a 177, com lacunas. A pasta `INFORMANTE 5 ` (com espaço) é o mesmo informante 5.
+  - As classes misturam **sinais isolados e frases inteiras**: 44 glosas de uma palavra e 131 frases após a normalização (classificação automática, a revisar). Há classes repetidas com IDs diferentes (`99_`/`114_Oscilar.`, `22_`/`31_Desejo do mês de...`, `18_`/`81_Quero alterar a forma de pagamento para Pix`).
+  - 1920×1080, 30 fps (6 vídeos a 59,94 fps), de 33 a 279 quadros (mediana 103).
+  - **Erros de rótulo:** 42 pares de vídeos byte a byte idênticos com rótulos diferentes. São os 30 vídeos de "Quero receber no meu e-mail" = "Quero receber no meu WhatsApp" e 12 de "Anterior" = "Página anterior". No registro, recebem a flag `label_conflict`. Há também 34 pares duplicados dentro da mesma classe (flag `duplicate_video`). Todos os pares são do mesmo informante, então não há vazamento entre sinalizadores.
+  - O ZIP RGB (9 GB) também foi extraído com `scripts/extract_zip_lenient.py`. O `Landmarks.zip` traz 10.682 arquivos `.npy` de landmarks de mão; o formato está a verificar.
 - **Observações:**
   - É recente (2026), aberto e já traz landmarks, além de cobrir isolado e contínuo, o que serve à Fase 6.
   - Quase todos os números vêm por enquanto de uma biblioteca de terceiros. Antes de adotar, baixar o README completo e o `Landmarks.zip` e confirmar classes, informantes e extrator.

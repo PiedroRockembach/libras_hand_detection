@@ -20,3 +20,8 @@
 | [0006](decisoes/0006-documentacao-e-contexto-versionados.md) | Documentação e contexto do Claude versionados; uso restrito de subagentes | Proposta |
 | [0007](decisoes/0007-ambiente-em-container.md) | Ambiente em container Docker (abordagem híbrida) | Proposta |
 | [0008](decisoes/0008-estrategia-de-dados-inicial.md) | Estratégia de dados inicial (MINDS-Libras principal, em camadas) | Proposta |
+| [0009](decisoes/0009-objetivo-poc-e-dataset-vivo.md) | Objetivo de 6 meses: POC demonstrável e base de dados extensível | Aceita |
+| [0010](decisoes/0010-esquema-canonico-de-dados.md) | Esquema canônico de dados com adaptadores por fonte | Aceita |
+| [0011](decisoes/0011-local-do-registro-de-dados.md) | Onde vive o registro de dados | Aceita |
+| [0012](decisoes/0012-cache-de-landmarks-brutos.md) | Cache de landmarks brutos, com normalização no carregamento | Aceita |
+| [0013](decisoes/0013-vocabulario-alvo-signbank.md) | Vocabulário-alvo baseado no Signbank da Libras (UFSC) | Aceita |

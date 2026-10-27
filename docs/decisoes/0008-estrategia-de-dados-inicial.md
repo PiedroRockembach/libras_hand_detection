@@ -47,3 +47,4 @@ O protocolo segue o ADR-0004: *nested* LOPO, o mesmo de Alves 2024 e dos Santos 
 - **Alfabeto e letras com movimento:** não há dataset público adequado. Fica pendente uma decisão própria; as opções são pedir os dados de Lima et al. 2019 (UFPB), usar as letras do V-LIBRASIL ou fazer uma coleta própria com aprovação do CEP.
 - A licença do ASL Citizen proíbe redistribuição: landmarks derivados dele não podem ser publicados.
 - O espaço de armazenamento precisa comportar pelo menos o MINDS (cerca de 65 GB de vídeo) mais o cache de landmarks.
+- **Atualização (ADR-0009, Aceita):** papéis revistos após o download de 2026-10-23/24. O MALTA-LIBRAS já foi baixado; LIBRAS-EQT-UECE e LSWH100 foram incluídos; Libras Movement (UCI) fica fora. Os dicionários (Signbank) passam a servir de base ao vocabulário-alvo (ADR-0013).

@@ -10,7 +10,12 @@
   - **Landmarks pré-computados:** **a verificar.**
 - **Protocolo oficial de avaliação:** é usado como **teste fora de domínio (OOD)** para modelos treinados no MINDS ([Lazzarotto et al., 2025](https://doi.org/10.5753/eramiars.2025.16773)). Isso também o torna independente de sinalizador em relação ao MINDS, desde que não haja sobreposição de pessoas (**a verificar**).
 - **Resultados de referência na literatura:** I3D-R50 pré-treinado no Kinetics-400, treinado no MINDS e testado nos 132 clipes do MALTA: acurácia macro de **0,455** (F1 0,428). X3D-S: 0,379. Slow-R50: 0,386. As validações no MINDS ficaram em 0,98–1,00 ([Lazzarotto et al., 2025](https://doi.org/10.5753/eramiars.2025.16773), Tabela 1). O BRACIS 2025 relata que transformers de vídeo (VideoMAE, TimeSformer, ViViT) se beneficiam de pré-treino em ações e não ganham com transferência de outras línguas de sinais ([resumo SBC](https://sol.sbc.org.br/index.php/bracis/article/view/40864)). Números do BRACIS: **a verificar.**
-- **Status no projeto:** candidato (teste OOD).
+- **Status no projeto:** adotado como teste fora de domínio, com ressalvas (ADR-0009). No registro: fonte `malta`, rótulos ainda não mapeados.
+- **Inventário local (2026-10-24):**
+  - **Formato confirmado:** cada `.pt` é um tensor PyTorch `uint8` de **32 × 3 × 224 × 224**, ou seja, 32 quadros RGB já reduzidos. **Não há vídeo original nem landmarks.** O fps e o critério de amostragem dos 32 quadros estão a verificar. A extração com MediaPipe sobre esses quadros é possível, mas com resolução e taxa temporal reduzidas.
+  - **`malta_libras_complete`: 25.653 clipes em 9 subcoleções**: acessibilidade_2 (5.822), acessibilidade_3 (5.678), spread_the_sign (4.118), ufsc (3.040), ufsc_v2 (3.062), youtube (1.412), youtube_v2 (1.410), ufv (675) e usp (436). São cerca de 13,4 mil rótulos distintos derivados do nome do arquivo (com URL-encoding e mojibake CP437 corrigidos no adaptador).
+  - **`malta_libras_MINDS_subset` está vazio na origem:** os 145 arquivos são ponteiros Git LFS (132 bytes) commitados no lugar dos tensores.
+  - **Não há ID de sinalizador.** No registro, cada subcoleção é um sinalizador "desconhecido" (opção conservadora para as divisões). As subcoleções `ufsc` e `youtube` indicam material do Signbank UFSC e do YouTube, então valem as ressalvas de licença e de sobreposição com outras fontes.
 - **Observações:**
   - É do grupo MALTA-Lab da **PUCRS** (Barros, Kupssinskü), a mesma instituição deste projeto. Vale contato direto para esclarecer conteúdo, licença e sobreposição de sinalizadores.
   - É o único teste "in the wild" para o vocabulário MINDS encontrado. Fortalece qualquer artigo: um resultado MINDS→MALTA mede generalização real.

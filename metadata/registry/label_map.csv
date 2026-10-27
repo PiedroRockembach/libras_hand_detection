@@ -1,0 +1,217 @@
+source_id,source_label,gloss_id
+eqt_uece,A energia caiu na casa toda.,G00021
+eqt_uece,A energia está oscilando há mais de sete dias.,G00022
+eqt_uece,A luz caiu em alguns cômodos.,G00023
+eqt_uece,A luz oscilou por mais de sete dias.,G00024
+eqt_uece,AINDA,G00025
+eqt_uece,ANTERIOR,G00026
+eqt_uece,AVANÇAR,G00027
+eqt_uece,Alguns.,G00028
+eqt_uece,Alterar o dia da fatura.,G00029
+eqt_uece,Atualizar data de vencimento da minha fatura.,G00030
+eqt_uece,COMUM,G00031
+eqt_uece,CPF ou número da conta.,G00032
+eqt_uece,Cadastrar conta digital.,G00033
+eqt_uece,Cadastrar meu whatsapp.,G00034
+eqt_uece,Cadastrar um e-mail.,G00035
+eqt_uece,Cadastrar.,G00036
+eqt_uece,Cair.,G00037
+eqt_uece,Caiu um raio.,G00038
+eqt_uece,Casa toda.,G00039
+eqt_uece,Conta está paga.,G00040
+eqt_uece,Cômodo.,G00041
+eqt_uece,Data.,G00042
+eqt_uece,Desejo cadastar meu e-mail.,G00043
+eqt_uece,Desejo cadastrar meu whatsapp.,G00044
+eqt_uece,Desejo do mês de...,G00045
+eqt_uece,Desejo mudar para o dia 30.,G00046
+eqt_uece,Dez.,G00047
+eqt_uece,Dia 01.,G00048
+eqt_uece,Dia 10.,G00049
+eqt_uece,Dia 15.,G00050
+eqt_uece,Dia 30.,G00051
+eqt_uece,Digital.,G00052
+eqt_uece,Energia está instável.,G00053
+eqt_uece,Energia oscilando.,G00054
+eqt_uece,Energia.,G00055
+eqt_uece,Escolher outro dia.,G00056
+eqt_uece,Escolher vencimento para o dia 01.,G00057
+eqt_uece,Escolher vencimento para o dia 10.,G00058
+eqt_uece,Escolher vencimento para o dia 15.,G00059
+eqt_uece,Escolher vencimento para o dia 30.,G00060
+eqt_uece,Está errado.,G00061
+eqt_uece,Está faltando energia somente na minha casa.,G00062
+eqt_uece,Eu desejo minha de energia de volta.,G00063
+eqt_uece,Eu desejo minha luz de volta.,G00064
+eqt_uece,Eu estou com a energia oscilando.,G00065
+eqt_uece,Eu estou com a luz oscilando.,G00066
+eqt_uece,Eu estou sem energia.,G00067
+eqt_uece,Eu estou sem luz.,G00068
+eqt_uece,Eu já paguei a conta do mês de ...,G00069
+eqt_uece,Eu já paguei todas as contas.,G00070
+eqt_uece,Eu já paguei tudo.,G00071
+eqt_uece,Eu não paguei.,G00072
+eqt_uece,Eu quero a luz de volta.,G00073
+eqt_uece,Eu quero cadastrar meu Whatsapp.,G00074
+eqt_uece,Eu quero cadastrar meu e-mail.,G00075
+eqt_uece,Eu quero consultar os detalhes da fatura de...,G00076
+eqt_uece,Eu quero imprimir a 2ª via simplificada.,G00077
+eqt_uece,Eu quero minha energia ligada.,G00078
+eqt_uece,Eu quero pagar a conta.,G00079
+eqt_uece,Eu quero pagar as minhas faturas em aberto.,G00080
+eqt_uece,Eu quero pagar com o Cartão de crédito.,G00081
+eqt_uece,Eu quero pagar com o Cartão de débito.,G00082
+eqt_uece,Eu quero pagar com o Pix.,G00083
+eqt_uece,Eu quero pagar todas as minhas faturas em aberto.,G00084
+eqt_uece,Eu quero que liguem minha luz.,G00085
+eqt_uece,Eu quero receber a 2ª via por e-mail.,G00086
+eqt_uece,Eu quero registrar a falta de energia.,G00087
+eqt_uece,Eu quero registrar a falta de luz.,G00088
+eqt_uece,Eu quero solicitar a religação da energia.,G00089
+eqt_uece,Eu quero ver.,G00090
+eqt_uece,Faltar.,G00091
+eqt_uece,Faltou energia em toda a minha rua.,G00092
+eqt_uece,Faltou energia.,G00093
+eqt_uece,HAVER,G00094
+eqt_uece,Informar.,G00095
+eqt_uece,Instável.,G00096
+eqt_uece,Intervenção.,G00097
+eqt_uece,Ir para o fim.,G00098
+eqt_uece,JÁ,G00099
+eqt_uece,Já paguei as faturas.,G00100
+eqt_uece,Luz oscilando.,G00101
+eqt_uece,Luz.,G00102
+eqt_uece,Mais.,G00103
+eqt_uece,Menos.,G00104
+eqt_uece,Mesmo.,G00105
+eqt_uece,Minha energia está fraca.,G00106
+eqt_uece,Minha luz está fraca.,G00107
+eqt_uece,Modificar conta digital.,G00108
+eqt_uece,Motivo.,G00109
+eqt_uece,Mudar a forma de pagamento.,G00110
+eqt_uece,Mudar data de vencimento da fatura.,G00111
+eqt_uece,"Não quero, obrigado.",G00112
+eqt_uece,Não quero.,G00113
+eqt_uece,Não sei.,G00114
+eqt_uece,Não tem energia em casa.,G00115
+eqt_uece,Não é mais o meu e-mail.,G00116
+eqt_uece,"Não, Obrigado.",G00117
+eqt_uece,"Não, ainda existem contas abertas.",G00118
+eqt_uece,"Não, eu não quero.",G00119
+eqt_uece,"Não, não quero mudar.",G00120
+eqt_uece,"Oi, eu desejo alterar a data de vencimento da minha conta.",G00121
+eqt_uece,"Oi, eu desejo alterar minha conta digital.",G00122
+eqt_uece,"Oi, eu quero alterar a data de vencimento da minha fatura.",G00123
+eqt_uece,"Oi, eu quero alterar minha conta digital.",G00124
+eqt_uece,"Oi, eu quero cadastrar minha conta digital.",G00125
+eqt_uece,"Oi, eu quero consultar meu histórico de faturamento.",G00126
+eqt_uece,"Oi, eu quero consultar minha fatura.",G00127
+eqt_uece,"Oi, eu quero emitir a segunda via da minha fatura.",G00128
+eqt_uece,"Oi, eu quero religar minha energia.",G00129
+eqt_uece,"Oi, eu quero religar minha luz.",G00130
+eqt_uece,Os fios da rede quebraram.,G00131
+eqt_uece,Oscilar.,G00132
+eqt_uece,PAGO,G00133
+eqt_uece,PRÓXIMA,G00134
+eqt_uece,Pagar contas em aberto.,G00135
+eqt_uece,Paguei a minha fatura.,G00136
+eqt_uece,Pessoas mexeram na rede.,G00137
+eqt_uece,Poste.,G00138
+eqt_uece,Principal praia casa.,G00139
+eqt_uece,PÁGINA,G00140
+eqt_uece,Página anterior.,G00141
+eqt_uece,Quero alterar a forma de pagamento para Cartão de crédito.,G00142
+eqt_uece,Quero alterar a forma de pagamento para Cartão de débito,G00143
+eqt_uece,Quero alterar a forma de pagamento para Pix,G00144
+eqt_uece,Quero alterar a forma de pagamento para Pix.,G00144
+eqt_uece,Quero mudar para o dia 01.,G00145
+eqt_uece,Quero mudar para o dia 10.,G00146
+eqt_uece,Quero mudar para o dia 15.,G00147
+eqt_uece,Quero mudar para o dia 30.,G00148
+eqt_uece,Quero mudar.,G00149
+eqt_uece,Quero receber minha conta pelo whatsapp.,G00150
+eqt_uece,Quero receber minha fatura pelo e-mail.,G00151
+eqt_uece,Quero receber no meu Whatsapp.,G00152
+eqt_uece,Quero receber no meu e-mail.,G00153
+eqt_uece,Quero saber mais informações sobre…,G00154
+eqt_uece,Quero ver mais informações sobre…,G00155
+eqt_uece,Quero.,G00156
+eqt_uece,Quinze.,G00157
+eqt_uece,Raio.,G00158
+eqt_uece,Receber pelo e-mail.,G00159
+eqt_uece,Receber pelo whatsapp.,G00160
+eqt_uece,Religar a energia.,G00161
+eqt_uece,Religar a luz.,G00162
+eqt_uece,Religar com urgência.,G00163
+eqt_uece,Religar.,G00164
+eqt_uece,Religação comum.,G00165
+eqt_uece,Rua.,G00166
+eqt_uece,SOMENTE ALGUNS CÔMODOS,G00167
+eqt_uece,Serviço.,G00168
+eqt_uece,"Sim, confirmo o pagamento.",G00169
+eqt_uece,"Sim, confirmo.",G00170
+eqt_uece,"Sim, enviar para o meu e-mail.",G00171
+eqt_uece,"Sim, está certo.",G00172
+eqt_uece,"Sim, eu paguei.",G00173
+eqt_uece,"Sim, eu quero.",G00174
+eqt_uece,"Sim, quero mudar.",G00175
+eqt_uece,"Sim, quero receber meu histórico de consumo",G00176
+eqt_uece,Sim.,G00177
+eqt_uece,Solicitar.,G00178
+eqt_uece,Tentar novamente.,G00179
+eqt_uece,Terceiros.,G00180
+eqt_uece,Toda.,G00181
+eqt_uece,Trinta.,G00182
+eqt_uece,URGÊNCIA,G00183
+eqt_uece,Um poste caiu.,G00184
+eqt_uece,Uma árvore caiu.,G00185
+eqt_uece,Vencimento.,G00186
+eqt_uece,Ver conta digital.,G00187
+eqt_uece,Ver outras contas.,G00188
+eqt_uece,Ver outros serviços.,G00189
+eqt_uece,Voltar para a primeira página.,G00190
+eqt_uece,alterar data de vencimento.,G00191
+eqt_uece,e-mail,G00192
+eqt_uece,"não, este email está desatualizado.",G00193
+eqt_uece,whatsapp,G00194
+eqt_uece,Árvore.,G00195
+minds,Acontecer,G00001
+minds,Aluno,G00002
+minds,Amarelo,G00003
+minds,America,G00004
+minds,Aproveitar,G00005
+minds,Bala,G00006
+minds,Banco,G00007
+minds,Banheiro,G00008
+minds,Barulho,G00009
+minds,Cinco,G00010
+minds,Conhecer,G00011
+minds,Espelho,G00012
+minds,Esquina,G00013
+minds,Filho,G00014
+minds,Maca,G00015
+minds,Medo,G00016
+minds,Ruim,G00017
+minds,Sapo,G00018
+minds,Vacina,G00019
+minds,Vontade,G00020
+minds_kinect,Acontecer,G00001
+minds_kinect,Aluno,G00002
+minds_kinect,Amarelo,G00003
+minds_kinect,America,G00004
+minds_kinect,Aproveitar,G00005
+minds_kinect,Bala,G00006
+minds_kinect,Banco,G00007
+minds_kinect,Banheiro,G00008
+minds_kinect,Barulho,G00009
+minds_kinect,Cinco,G00010
+minds_kinect,Conhecer,G00011
+minds_kinect,Espelho,G00012
+minds_kinect,Esquina,G00013
+minds_kinect,Filho,G00014
+minds_kinect,Maca,G00015
+minds_kinect,Medo,G00016
+minds_kinect,Ruim,G00017
+minds_kinect,Sapo,G00018
+minds_kinect,Vacina,G00019
+minds_kinect,Vontade,G00020
