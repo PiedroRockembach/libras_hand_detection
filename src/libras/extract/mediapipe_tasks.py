@@ -9,6 +9,7 @@ that happens at load time.
 from __future__ import annotations
 
 import time
+import warnings
 from collections.abc import Callable, Iterator
 from pathlib import Path
 
@@ -226,7 +227,8 @@ def detection_stats(lm: dict[str, np.ndarray], wrist_visibility: float = 0.5,
     t = len(lm["pose"])
     hp = lm["hand_present"]
     pose = lm["pose"]
-    with np.errstate(invalid="ignore"):  # frames without pose give NaN and count as resting
+    with warnings.catch_warnings():  # frames without pose give NaN and count as resting
+        warnings.simplefilter("ignore", RuntimeWarning)
         mid_y = (np.nanmean(pose[:, [11, 12], 1], axis=1) + np.nanmean(pose[:, [23, 24], 1], axis=1)) / 2
     counts = {"all": [0, 0], "signing": [0, 0], "rest": [0, 0]}  # [missed, visible]
     for wrist in POSE_WRIST.values():

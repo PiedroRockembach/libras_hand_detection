@@ -45,6 +45,13 @@ Avaliação de viabilidade por objetivo do ADR-0009:
 
 *Fase 2.* O cache guarda os landmarks brutos do MediaPipe (todos os pontos, fps original, máscara de detecção), um arquivo por amostra e versionado pelo extrator. Seleção de pontos, normalização, reamostragem e aumento de dados são aplicados no carregamento, configurados em YAML (ADR-0012).
 
+**Piloto de extração (2026-10-28, ADR-0015, Proposta).** O piloto rodou em 424 vídeos: sinalizador 5 do MINDS (Canon e Kinect), 124 clipes do MALTA com os sinais do MINDS e 100 vídeos do EQT. Ele comparou a extração no quadro inteiro (`mp_v1`) com a extração com recorte guiado pela pose (`mp_v2`: mãos e rosto rodam em recortes do espaço de sinalização e da cabeça, derivados da pose).
+
+- **Rosto:** o recorte elevou a detecção de 0% para 100% no MINDS e de 14% para 100% no EQT.
+- **Mãos durante o sinal** (pulso acima do ponto médio entre ombros e quadril): perda de 6,6% no MINDS Canon, 16,3% no Kinect, 6,4% no EQT e 18,0% no MALTA (`mp_v2`, por quadro). A maior parte das perdas no total vem do braço em repouso.
+
+Fonte: `python -m libras.extract report --config configs/extraction/mp_v{1,2}.yaml` (`landmarks/mp_v{1,2}/stats.csv`). A extração é determinística: a reextração depois da refatoração do código foi idêntica bit a bit.
+
 ## 3.4 Modelos
 
 *Fases 3–4; plano no ADR-0014.* Progressão planejada: MLP sobre estatísticas da sequência (sanidade) → GRU → transformer / grafo espaço-temporal.
