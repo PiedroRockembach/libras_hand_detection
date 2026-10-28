@@ -4,6 +4,7 @@
     python -m libras.extract run --config configs/extraction/mp_v1.yaml \
         --sources minds minds_kinect --signers minds:05 minds_kinect:05 [--malta-like minds]
     python -m libras.extract report --config configs/extraction/mp_v1.yaml
+    python -m libras.extract restat --config ...   # recompute stats.csv from the cached .npz
 
 Output: landmarks/<version>/<source_id>/<sample>.npz, MANIFEST.json (config, MediaPipe version,
 model SHA-256) and stats.csv (per-sample detection metrics). Every run is logged to
@@ -41,7 +42,9 @@ from libras.registry.schema import TABLES
 from libras.registry.store import CURATED_DIR, generated_dir, read_table
 
 STATS_FIELDS = ["sample_id", "source_id", "gloss", "n_frames", "any_hand_rate", "both_hands_rate",
-                "pose_rate", "face_rate", "missed_hand_rate", "ms_per_frame", "error"]
+                "pose_rate", "face_rate", "missed_hand_rate", "missed_signing_rate",
+                "missed_rest_rate", "signing_wrist_frames", "rest_wrist_frames", "ms_per_frame",
+                "error"]
 
 
 def sha256(path: Path) -> str:
@@ -186,11 +189,46 @@ def cmd_report(cfg: dict, root: Path) -> None:
                         else f"{'-':>16}")
         print(f"{src:14} {len(rs):5d} {len(rs) - len(ok):4d} " + " ".join(f"{v:>16}" for v in vals))
     print("values: median (mean) per sample")
+    if "missed_signing_rate" not in rows[0]:
+        return
+    print("hands missed, pooled over frames (signing = wrist above shoulder-hip midpoint):")
+    for src, rs in sorted(by_source.items()):
+        pooled = []
+        for phase in ("signing", "rest"):
+            n = sum(int(r[f"{phase}_wrist_frames"] or 0) for r in rs if not r["error"])
+            miss = sum(float(r[f"missed_{phase}_rate"]) * int(r[f"{phase}_wrist_frames"])
+                       for r in rs if not r["error"] and r[f"missed_{phase}_rate"] not in ("", "nan"))
+            pooled.append(f"{phase} {miss / n:6.1%} of {n:6d} frames" if n else f"{phase} -")
+        print(f"  {src:14} " + " | ".join(pooled))
+
+
+def cmd_restat(cfg: dict, root: Path) -> None:
+    """Recompute stats.csv from the cached .npz files (no re-extraction), e.g. after adding a
+    metric. Keeps the original extraction time of each sample."""
+    stats_file = out_dir(cfg, root) / "stats.csv"
+    old = {r["sample_id"]: r for r in csv.DictReader(stats_file.open())}
+    rows = []
+    for r in old.values():
+        if r["error"]:
+            rows.append(r)
+            continue
+        safe = r["sample_id"].replace(":", "__").replace("/", "_")
+        lm = dict(np.load(out_dir(cfg, root) / r["source_id"] / f"{safe}.npz"))
+        rows.append(r | detection_stats(lm))
+    tmp = stats_file.with_suffix(".tmp")
+    with tmp.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=STATS_FIELDS, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    tmp.replace(stats_file)
+    print(f"{stats_file}: {len(rows)} samples recomputed")
+    log_event(root, "extract.restat", inputs=[str(out_dir(cfg, root).relative_to(root))],
+              outputs=[str(stats_file.relative_to(root))], result={"samples": len(rows)})
 
 
 def main() -> int:
     p = argparse.ArgumentParser(prog="python -m libras.extract")
-    p.add_argument("cmd", choices=["models", "run", "report"])
+    p.add_argument("cmd", choices=["models", "run", "report", "restat"])
     p.add_argument("--config", type=Path, required=True)
     p.add_argument("--data-root", type=Path, default=os.environ.get("LIBRAS_DATA_ROOT"))
     p.add_argument("--sources", nargs="+", default=["minds"])
@@ -205,7 +243,8 @@ def main() -> int:
     cfg = yaml.safe_load(args.config.read_text())
     root = args.data_root.resolve()
     {"models": lambda: cmd_models(cfg, root), "run": lambda: cmd_run(cfg, root, args),
-     "report": lambda: cmd_report(cfg, root)}[args.cmd]()
+     "report": lambda: cmd_report(cfg, root),
+     "restat": lambda: cmd_restat(cfg, root)}[args.cmd]()
     return 0
 
 

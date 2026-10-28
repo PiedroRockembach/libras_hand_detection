@@ -225,23 +225,38 @@ def detection_stats(lm: dict[str, np.ndarray], wrist_visibility: float = 0.5,
     """
     t = len(lm["pose"])
     hp = lm["hand_present"]
-    missed = visible = 0
+    pose = lm["pose"]
+    with np.errstate(invalid="ignore"):  # frames without pose give NaN and count as resting
+        mid_y = (np.nanmean(pose[:, [11, 12], 1], axis=1) + np.nanmean(pose[:, [23, 24], 1], axis=1)) / 2
+    counts = {"all": [0, 0], "signing": [0, 0], "rest": [0, 0]}  # [missed, visible]
     for wrist in POSE_WRIST.values():
-        w = lm["pose"][:, wrist]
+        w = pose[:, wrist]
         vis = (w[:, 3] > wrist_visibility) & (w[:, 0] >= 0) & (w[:, 0] <= 1) & \
               (w[:, 1] >= 0) & (w[:, 1] <= 1)
         # A hand "covers" the wrist if any detected hand's wrist point (index 0) is close.
         hand_wrists = lm["hands"][:, :, 0, :2]  # T x 2 x 2
         dist = np.linalg.norm(hand_wrists - w[:, None, :2], axis=-1)
         covered = np.nan_to_num(dist, nan=np.inf).min(axis=1) < match_dist
-        visible += int(vis.sum())
-        missed += int((vis & ~covered).sum())
+        # Signing: wrist above the midpoint between shoulders and hips (arm not hanging).
+        signing = w[:, 1] < mid_y
+        for name, sel in (("all", vis), ("signing", vis & signing), ("rest", vis & ~signing)):
+            counts[name][0] += int((sel & ~covered).sum())
+            counts[name][1] += int(sel.sum())
+
+    def rate(name: str) -> float:
+        missed, visible = counts[name]
+        return missed / visible if visible else float("nan")
+
     return {
         "n_frames": t,
         "any_hand_rate": float(hp.any(axis=1).mean()) if t else 0.0,
         "both_hands_rate": float(hp.all(axis=1).mean()) if t else 0.0,
         "pose_rate": float(lm["pose_present"].mean()) if t else 0.0,
         "face_rate": float(lm["face_present"].mean()) if t else 0.0,
-        "missed_hand_rate": missed / visible if visible else float("nan"),
+        "missed_hand_rate": rate("all"),
+        "missed_signing_rate": rate("signing"),
+        "missed_rest_rate": rate("rest"),
+        "signing_wrist_frames": counts["signing"][1],
+        "rest_wrist_frames": counts["rest"][1],
         "ms_per_frame": 1000.0 * float(lm["extract_seconds"]) / t if t else 0.0,
     }

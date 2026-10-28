@@ -26,6 +26,12 @@ def test_missed_hand_rate_counts_only_visible_wrists():
     assert s["both_hands_rate"] == 0.0
     assert s["face_rate"] == pytest.approx(0.5)
     assert s["ms_per_frame"] == pytest.approx(100.0)
+    # Wrist at y=0.6 is above the shoulder/hip midpoint (pose rows default to y=0 -> mid 0),
+    # so it is "rest" here; flip the hips lower to make it "signing".
+    lm = fake_landmarks()
+    lm["pose"][:, [23, 24], 1] = 2.0  # midpoint = 1.0 -> wrist (0.6) counts as signing
+    s = detection_stats(lm)
+    assert s["missed_signing_rate"] == pytest.approx(0.5) and s["signing_wrist_frames"] == 4
 
 
 def test_crop_mapping_round_trip():
