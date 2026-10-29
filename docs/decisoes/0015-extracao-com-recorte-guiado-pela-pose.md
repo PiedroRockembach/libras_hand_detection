@@ -1,6 +1,6 @@
 # ADR-0015: Extração de landmarks com recorte guiado pela pose (`mp_v2`)
 
-- **Status:** Proposta
+- **Status:** Aceita (aprovada pelo pesquisador em 2026-10-29)
 - **Data:** 2026-10-28
 - **Relacionadas:** ADR-0002, ADR-0012, ADR-0014
 
