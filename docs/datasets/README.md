@@ -52,6 +52,12 @@ O script executa, nesta ordem:
 2. **Extração:** `scripts/extract_zip_lenient.py`, que verifica o CRC de todos os arquivos, inclusive dos que já existiam.
 3. **Registro canônico:** `python -m libras.registry build` e `validate`.
 
+Os landmarks são extraídos em seguida, dentro da imagem oficial, com a configuração padrão (ADR-0015):
+
+```bash
+LIBRAS_DATA_ROOT=/mnt/hd1tb/libras-data scripts/extract_landmarks.sh
+```
+
 Os passos são idempotentes. Cada operação, inclusive quando roda isolada, acrescenta uma linha a `LIBRAS_DATA_ROOT/PROVENANCE.jsonl`, com data, commit (e se a árvore estava suja), comando, entradas, saídas e resultado. As operações anteriores a 2026-10-27 estão no log marcadas como `"retroactive": true`.
 
 As tabelas curadas (glosas e mapeamento de rótulos) vêm do git, em `metadata/registry/`. Uma correção de rótulo é um commit nessas tabelas, não uma edição nos dados.
