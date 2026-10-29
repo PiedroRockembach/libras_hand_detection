@@ -35,6 +35,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from libras.progress import Progress
 from libras.provenance import log_event
 
 CHUNK = 1 << 20
@@ -236,12 +237,16 @@ def run_dataset(name: str, kind: str, source: str, raw: Path, workers: int, conn
             pool.submit(download, url, out / key, size, ck, connections): key
             for key, url, size, ck in files
         }
+        progress = Progress(f"libras-download-{name}", f"Download {name}", total=len(files),
+                            unit="arquivos")
         for fut in as_completed(futs):
             try:
                 entries.append(fut.result())
             except Exception as e:  # keep going; report at the end
                 errors.append(f"{futs[fut]}: {e}")
                 log.error("%s: %s", futs[fut], e)
+            progress.advance()
+        progress.finish(ok=not errors)
 
     manifest = {
         "dataset": name,

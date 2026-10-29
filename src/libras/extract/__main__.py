@@ -35,6 +35,7 @@ from libras.extract.mediapipe_tasks import (
     read_frames_tensor,
     read_video,
 )
+from libras.progress import Progress
 from libras.provenance import log_event
 from libras.registry.adapters import malta
 from libras.registry.adapters.base import match_key
@@ -158,13 +159,18 @@ def cmd_run(cfg: dict, root: Path, args: argparse.Namespace) -> None:
             w.writeheader()
         futures = [pool.submit(_extract_one, s, str(root), str(npz_path(cfg, root, s)))
                    for s in todo]
-        for n, fut in enumerate(as_completed(futures), start=1):
-            row = fut.result()
-            errors += bool(row["error"])
-            w.writerow(row)
-            f.flush()
-            if n % 50 == 0 or n == len(futures):
-                print(f"  {n}/{len(futures)} done, {errors} errors", flush=True)
+        label = ", ".join(args.sources) + (f" + MALTA ~{args.malta_like}" if args.malta_like else "")
+        with Progress(f"libras-extract-{cfg['version']}",
+                      f"Extração de landmarks {cfg['version']} ({label})",
+                      total=len(futures), unit="vídeos") as progress:
+            for n, fut in enumerate(as_completed(futures), start=1):
+                row = fut.result()
+                errors += bool(row["error"])
+                w.writerow(row)
+                f.flush()
+                progress.advance()
+                if n % 50 == 0 or n == len(futures):
+                    print(f"  {n}/{len(futures)} done, {errors} errors", flush=True)
     log_event(root, "extract.run", inputs=[f"registry/current/samples.csv ({len(samples)})"],
               outputs=[str(out_dir(cfg, root).relative_to(root))],
               result={"selected": len(samples), "extracted": len(todo) - errors,

@@ -12,6 +12,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from libras.progress import Progress
+
 CHUNK = 8 << 20
 
 
@@ -63,8 +65,11 @@ def probe_all(paths: list[Path], cache_file: Path, workers: int = 8) -> dict[str
     todo = [p for p in paths if key(p) not in cache]
     if todo:
         cache_file.parent.mkdir(parents=True, exist_ok=True)
-        with ThreadPoolExecutor(workers) as pool, cache_file.open("a") as f:
-            for p, info in zip(todo, pool.map(probe_video, todo)):
+        with ThreadPoolExecutor(workers) as pool, cache_file.open("a") as f, \
+                Progress("libras-registry-probe", "Inventário de vídeos (ffprobe + SHA-256)",
+                         total=len(todo), unit="vídeos") as progress:
+            for p, info in zip(todo, pool.map(probe_video, todo), strict=True):
+                progress.advance()
                 cache[key(p)] = info
                 f.write(json.dumps({"key": key(p), "info": info}) + "\n")
     return {str(p): cache[key(p)] for p in paths}

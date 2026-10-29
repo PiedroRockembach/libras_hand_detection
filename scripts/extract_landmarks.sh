@@ -11,8 +11,13 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 WORKERS="${1:-8}"
 CONFIG=configs/extraction/mp_v2.yaml
 
+# Progress bars for the task-progress mod: the container writes into the host's folder.
+PROGRESS_DIR="${CLAUDE_PROGRESS_DIR:-$HOME/.cache/claude-progress}"
+mkdir -p "$PROGRESS_DIR"
+
 run() {
-    docker run --rm -v "$REPO":/workspace -v "$LIBRAS_DATA_ROOT":/data libras:dev \
+    docker run --rm -v "$REPO":/workspace -v "$LIBRAS_DATA_ROOT":/data \
+        -v "$PROGRESS_DIR":/progress -e CLAUDE_PROGRESS_DIR=/progress libras:dev \
         python -m libras.extract "$@" --config "$CONFIG" 2>&1 \
         | grep -v '^W0000\|^I0000\|XNNPACK\|InitGoogle\|inference_feedback\|landmark_projection'
 }

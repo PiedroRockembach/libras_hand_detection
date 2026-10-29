@@ -22,6 +22,7 @@ import zlib
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from libras.progress import Progress
 from libras.provenance import log_event
 
 LOCAL_SIG = b"PK\x03\x04"
@@ -94,7 +95,11 @@ def main() -> int:
     errors: list[str] = []
     reextracted: list[str] = []
     with zipfile.ZipFile(args.archive) as zf, args.archive.open("rb") as f:
-        for info in zf.infolist():
+        members = zf.infolist()
+        progress = Progress(f"libras-unzip-{args.archive.stem}", f"Extração do ZIP {args.archive.name}",
+                            total=len(members), unit="arquivos")
+        for info in members:
+            progress.advance()
             name = info.filename
             if info.is_dir() or any(name.startswith(x) or name.endswith(x) for x in args.exclude):
                 continue
@@ -113,6 +118,7 @@ def main() -> int:
                 done += 1
             except ValueError as e:
                 errors.append(str(e))
+    progress.finish(ok=not errors)
     summary = (f"{args.archive.name}: extracted {done}, skipped {skipped} (CRC ok), "
                f"re-extracted {len(reextracted)} (CRC mismatch), errors {len(errors)}")
     print(summary)
