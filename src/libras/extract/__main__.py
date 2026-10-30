@@ -37,10 +37,7 @@ from libras.extract.mediapipe_tasks import (
 )
 from libras.progress import Progress
 from libras.provenance import log_event
-from libras.registry.adapters import malta
-from libras.registry.adapters.base import match_key
-from libras.registry.schema import TABLES
-from libras.registry.store import CURATED_DIR, generated_dir, read_table
+from libras.registry.select import landmark_path, select_samples
 
 STATS_FIELDS = ["sample_id", "source_id", "gloss", "n_frames", "any_hand_rate", "both_hands_rate",
                 "pose_rate", "face_rate", "missed_hand_rate", "missed_signing_rate",
@@ -61,8 +58,7 @@ def out_dir(cfg: dict, root: Path) -> Path:
 
 
 def npz_path(cfg: dict, root: Path, sample: dict) -> Path:
-    safe = sample["sample_id"].replace(":", "__").replace("/", "_")
-    return out_dir(cfg, root) / sample["source_id"] / f"{safe}.npz"
+    return landmark_path(root, cfg["version"], sample)
 
 
 def ensure_manifest(cfg: dict, root: Path) -> dict:
@@ -80,25 +76,6 @@ def ensure_manifest(cfg: dict, root: Path) -> dict:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(manifest, indent=2))
     return manifest
-
-
-def select_samples(root: Path, sources: list[str], signers: list[str] | None,
-                   limit: int | None, malta_like: str | None) -> list[dict]:
-    glosses = {g["gloss_id"]: g["gloss"] for g in read_table(CURATED_DIR / "glosses.csv",
-                                                            TABLES["glosses"])}
-    rows = [s | {"gloss": glosses[s["gloss_id"]]}
-            for s in read_table(generated_dir(root) / "samples.csv", TABLES["samples"])
-            if s["source_id"] in sources and "label_conflict" not in s["quality_flags"]
-            and (not signers or s["signer_uid"] in signers)]
-    if malta_like:  # MALTA clips (not in the registry yet) whose label matches SOURCE's glosses
-        wanted = {match_key(glosses[s["gloss_id"]]): glosses[s["gloss_id"]]
-                  for s in read_table(generated_dir(root) / "samples.csv", TABLES["samples"])
-                  if s["source_id"] == malta_like}
-        for s in malta.scan(root).samples:
-            if (k := match_key(s["source_label"])) in wanted:
-                rows.append(s | {"gloss": wanted[k]})
-    rows.sort(key=lambda s: s["sample_id"])
-    return rows[:limit] if limit else rows
 
 
 _extractor: Extractor | None = None

@@ -8,7 +8,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Dados e artefatos (ficam em LIBRAS_DATA_ROOT, fora do repositório)
-data/
+/data/
 outputs/
 runs/
 mlruns/
