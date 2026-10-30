@@ -11,16 +11,19 @@ import torch
 
 from libras.data.augment import augment, mirror_permutation, time_positions
 from libras.data.features import Prepared, load, to_features
+from libras.registry.schema import TABLES
 from libras.registry.select import landmark_path, select_samples
+from libras.registry.store import generated_dir, read_table
 
 
 @dataclass
 class Item:
     sample_id: str
     source_id: str
-    signer: str
+    signer: str  # the person: views of the same person (same_person_as) share one id
     gloss: str
     seq: Prepared
+    train_only: bool = False  # extra view (e.g. MINDS Kinect): never in validation or test
 
 
 def _load(args: tuple[str, dict]) -> Prepared:
@@ -29,9 +32,12 @@ def _load(args: tuple[str, dict]) -> Prepared:
 
 def load_items(root: Path, data_cfg: dict, feat_cfg: dict, workers: int = 4
                ) -> tuple[list[Item], list[Item]]:
-    """Registry samples of the configured sources, plus the MALTA look-alikes used as the
-    out-of-domain test (ADR-0014 §5). Returns (in-domain items, MALTA items)."""
-    rows = select_samples(root, data_cfg["sources"], None, None, data_cfg.get("ood_malta_like"))
+    """Registry samples of the configured sources (plus ``extra_train_sources``, training
+    only), and the MALTA look-alikes used as the out-of-domain test (ADR-0014 §5).
+    Returns (in-domain items, MALTA items)."""
+    extra = data_cfg.get("extra_train_sources", [])
+    rows = select_samples(root, data_cfg["sources"] + extra, None, None,
+                          data_cfg.get("ood_malta_like"))
     rows = [r for r in rows if "duplicate_video" not in r.get("quality_flags", "")]
     paths = [str(landmark_path(root, data_cfg["landmarks"], r)) for r in rows]
     missing = [p for p in paths if not Path(p).exists()]
@@ -39,8 +45,10 @@ def load_items(root: Path, data_cfg: dict, feat_cfg: dict, workers: int = 4
         raise SystemExit(f"{len(missing)} samples have no landmarks, e.g. {missing[0]}")
     with ProcessPoolExecutor(workers) as pool:
         seqs = list(pool.map(_load, [(p, feat_cfg) for p in paths], chunksize=16))
-    items = [Item(r["sample_id"], r["source_id"], r["signer_uid"], r["gloss"], s)
-             for r, s in zip(rows, seqs)]
+    person = {s["signer_uid"]: s["same_person_as"] or s["signer_uid"]
+              for s in read_table(generated_dir(root) / "signers.csv", TABLES["signers"])}
+    items = [Item(r["sample_id"], r["source_id"], person.get(r["signer_uid"], r["signer_uid"]),
+                  r["gloss"], s, r["source_id"] in extra) for r, s in zip(rows, seqs)]
     return ([i for i in items if i.source_id != "malta"],
             [i for i in items if i.source_id == "malta"])
 

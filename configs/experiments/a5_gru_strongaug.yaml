@@ -1,0 +1,49 @@
+# Ablation of a1_gru_minds: stronger geometric and detection-failure augmentation.
+name: a5_gru_strongaug
+seed: 1
+
+data:
+  landmarks: mp_v2         # landmarks/<version>/ (ADR-0015)
+  sources: [minds]         # Canon view only; the Kinect view joins in phase B
+  ood_malta_like: minds    # MALTA clips whose label matches a MINDS gloss
+
+features:
+  # Points: both hands (2 x 21), these pose landmarks, these face-mesh landmarks.
+  pose_points: [0, 11, 12, 13, 14, 15, 16]  # nose, shoulders, elbows, wrists
+  face_points: [
+    61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 409, 270, 269, 267, 0, 37, 39, 40, 185,  # outer lips
+    46, 53, 52, 65, 55, 70, 63, 105, 66, 107,          # eyebrow (image left)
+    276, 283, 282, 295, 285, 300, 293, 334, 296, 336,  # eyebrow (image right)
+    1]                                                 # nose tip
+  frames: 64          # fixed length after resampling (ADR-0014, initial value)
+  max_hand_gap: 8     # frames; longer hand dropouts stay missing
+  hand_local: true    # hand points relative to the wrist, scaled by hand size
+  velocity: true      # frame-to-frame differences of the body-normalized points
+
+augment:              # training only
+  scale: 0.2          # uniform 1 +- 0.2 (a1: 0.1)
+  rotate_deg: 15      # (a1: 10; strong rotation hurts, Zelezny 2025)
+  noise: 0.02         # shoulder-width units (a1: 0.01)
+  time_crop: 0.1      # up to 10% trimmed at each end
+  time_warp: 0.3      # smooth tempo change within the sign
+  hand_drop: 0.3      # (a1: 0.1) probability of losing one hand over 10-30% of the frames
+  frame_drop: 0.05    # per-frame probability of a missed frame
+  mirror: 0.0         # left-right flip with hand swap; ablation later
+
+model:
+  encoder: gru
+  hidden: 192
+  layers: 2
+  bidirectional: true   # offline isolated signs; the real-time version is causal (phase D)
+  dropout: 0.3
+  embedding: 256
+  cosine_scale: 16.0
+
+train:
+  epochs: 80
+  batch_size: 32
+  lr: 0.002
+  warmup: 0.1
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  grad_clip: 1.0

@@ -11,19 +11,19 @@ Média ± desvio-padrão (populacional) entre as 12 dobras. Em cada dobra, o tes
 
 ## 4.1 Fase A: baseline de sinais isolados (MINDS)
 
-**Teste fora de domínio (MALTA, clipes com os 20 sinais do MINDS), modelos das 12 dobras:**
+**Teste fora de domínio (MALTA, 109 clipes distintos com os 20 sinais do MINDS), modelos das 12 dobras.** Reavaliação de 2026-10-30 (`python -m libras.train.evaluate`, commit `d27857b`, pastas `eval-*` dentro de cada execução), depois de remover clipes duplicados (ver abaixo):
 
 | Modelo | Top-1 | Top-5 | F1-macro |
 |---|---|---|---|
-| a0 (MLP estatísticas) | 0,545 ± 0,042 | 0,794 ± 0,012 | 0,510 ± 0,052 |
-| a1 (GRU) | 0,658 ± 0,036 | 0,812 ± 0,025 | 0,629 ± 0,045 |
+| a0 (MLP estatísticas) | 0,521 ± 0,039 | 0,778 | 0,499 |
+| a1 (GRU) | 0,635 ± 0,034 | 0,791 | 0,616 |
 
-Top-1 médio por subcoleção do MALTA (a0 → a1): acessibilidade_2 (20 clipes) 0,671 → 0,675; acessibilidade_3 (13) 0,500 → 0,603; spread_the_sign (14) 0,482 → 0,565; ufsc (19) 0,487 → 0,596; ufsc_v2 (18) 0,426 → 0,620; ufv (6) 0,222 → 0,444; usp (8) 0,625 → 0,792; youtube (13) 0,679 → 0,801; youtube_v2 (13) 0,679 → 0,801.
+Top-1 médio por subcoleção (a0 → a1): acessibilidade_2 (20 clipes) 0,671 → 0,675; acessibilidade_3 (13) 0,500 → 0,603; spread_the_sign (14) 0,482 → 0,565; ufsc (19) 0,487 → 0,596; ufsc_v2 (18) 0,426 → 0,620; ufv (6) 0,222 → 0,444; usp (8) 0,625 → 0,792; youtube (11) 0,629 → 0,773.
+
+**Duplicatas no MALTA:** a subcoleção `youtube_v2` é uma cópia da `youtube` (1.183 dos 1.185 arquivos distintos são idênticos byte a byte), e a `youtube` repete clipes com nomes de acentuação corrompida. A avaliação original, com 124 clipes, contava essas cópias e dava 0,545 (a0) e 0,658 (a1) no `summary.json` de cada execução. Desde o commit `d27857b`, a seleção mantém um clipe por conteúdo (SHA-256 do arquivo). Entre `ufsc` e `ufsc_v2` não há arquivos idênticos.
 
 **Leitura:**
 
 - No MINDS, o modelo que ignora a ordem dos quadros (a0) empata com a GRU (a1). Os 20 sinais do MINDS se separam pelas posições médias. A acurácia está na faixa relatada por dos Santos 2025 (0,94 ± 0,04, MediaPipe), mas o protocolo dele é LOPO aninhado, então a comparação não é direta.
-- **Fora de domínio, a GRU é melhor (0,658 contra 0,545).** A queda de ~0,93 para ~0,66 confirma que a acurácia no MINDS não mede robustez (Delucis 2025), e é este o número a melhorar antes da demo.
+- **Fora de domínio, a GRU é melhor (0,635 contra 0,521).** A queda de ~0,93 para ~0,64 confirma que a acurácia no MINDS não mede robustez (Delucis 2025), e é este o número a melhorar antes da demo.
 - **Reprodutibilidade:** as execuções a partir do commit limpo repetiram exatamente os números de uma execução anterior com o mesmo código ainda não commitado (determinismo em GPU com seed fixa).
-
-**Limitação do conjunto MALTA usado:** os 124 clipes são **109 clipes distintos**. A subcoleção `youtube_v2` é uma cópia da `youtube`: 1.183 dos 1.185 arquivos distintos de `youtube_v2` são idênticos byte a byte a arquivos de `youtube`. A própria `youtube` também tem nomes duplicados por acentuação corrompida. Os resultados acima contam essas cópias. A correção (remover as duplicatas na seleção do MALTA) e a reavaliação estão pendentes. Se `ufsc` e `ufsc_v2` também se sobrepõem, ainda está a verificar.

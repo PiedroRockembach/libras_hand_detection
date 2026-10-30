@@ -112,7 +112,8 @@ def main() -> int:
         model = build_model(cfg["model"], n_features(fc), len(classes)).to(device)
         state = torch.load(run / f"fold_{fold['fold']:02d}" / "model.pt", map_location=device)
         model.load_state_dict(state)
-        test_ds = SignDataset([i for i in items if i.signer in fold["test"]], classes, fc)
+        test_ds = SignDataset([i for i in items if i.signer in fold["test"] and not i.train_only],
+                              classes, fc)
         r = {"fold": fold["fold"], "test_signer": fold["test"],
              "test": scores(predict(model, test_ds, device, batch), test_ds.labels, len(classes)),
              "malta": malta_scores(predict(model, malta_ds, device, batch), malta,

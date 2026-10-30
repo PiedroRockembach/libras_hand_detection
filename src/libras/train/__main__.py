@@ -45,7 +45,8 @@ def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str
              device: str, out: Path, progress: Progress) -> dict:
     seed = cfg["seed"] * 1000 + fold["fold"]
     seed_everything(seed)
-    by = {k: [i for i in items if i.signer in fold[k]] for k in ("train", "val", "test")}
+    by = {k: [i for i in items if i.signer in fold[k] and (k == "train" or not i.train_only)]
+          for k in ("train", "val", "test")}
     fc, tc = cfg["features"], cfg["train"]
     train_ds = SignDataset(by["train"], classes, fc, cfg["augment"], seed)
     val_ds, test_ds = (SignDataset(by[k], classes, fc) for k in ("val", "test"))
@@ -110,7 +111,7 @@ def main() -> int:
 
     items, malta = load_items(root, cfg["data"], cfg["features"], args.workers)
     classes = sorted({i.gloss for i in items})
-    folds = loso_folds(sorted({i.signer for i in items}))
+    folds = loso_folds(sorted({i.signer for i in items if not i.train_only}))
     if args.folds is not None:
         folds = [f for f in folds if f["fold"] in args.folds]
 
