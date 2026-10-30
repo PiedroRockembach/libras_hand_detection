@@ -6,6 +6,7 @@ from pathlib import Path
 
 from libras.registry.adapters import malta
 from libras.registry.adapters.base import match_key
+from libras.registry.probe import sha256
 from libras.registry.schema import TABLES
 from libras.registry.store import CURATED_DIR, generated_dir, read_table
 
@@ -28,8 +29,14 @@ def select_samples(root: Path, sources: list[str], signers: list[str] | None,
         wanted = {match_key(glosses[s["gloss_id"]]): glosses[s["gloss_id"]]
                   for s in read_table(generated_dir(root) / "samples.csv", TABLES["samples"])
                   if s["source_id"] == malta_like}
-        for s in malta.scan(root).samples:
+        # Byte-identical clips appear under several names and collections (youtube_v2 copies
+        # youtube; mis-encoded accents duplicate names): keep the first of each content.
+        seen: set[str] = set()
+        for s in sorted(malta.scan(root).samples, key=lambda s: s["sample_id"]):
             if (k := match_key(s["source_label"])) in wanted:
-                rows.append(s | {"gloss": wanted[k]})
+                digest = sha256(root / s["path"])
+                if digest not in seen:
+                    seen.add(digest)
+                    rows.append(s | {"gloss": wanted[k]})
     rows.sort(key=lambda s: s["sample_id"])
     return rows[:limit] if limit else rows

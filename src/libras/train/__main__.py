@@ -24,13 +24,13 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import yaml
-from sklearn.metrics import confusion_matrix, f1_score
 
 from libras.data.dataset import Item, SignDataset, load_items, loso_folds
 from libras.data.features import n_features
 from libras.models import build_model
 from libras.progress import Progress
 from libras.provenance import git_state
+from libras.train.evaluate import malta_scores, predict, scores, summarize
 
 
 def seed_everything(seed: int) -> None:
@@ -39,41 +39,6 @@ def seed_everything(seed: int) -> None:
     torch.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-
-
-@torch.no_grad()
-def predict(model, ds: SignDataset, device: str, batch: int) -> np.ndarray:
-    model.eval()
-    out = []
-    for x, _ in torch.utils.data.DataLoader(ds, batch_size=batch):
-        out.append(model(x.to(device))[0].float().cpu())
-    return torch.cat(out).numpy() if out else np.zeros((0, 0))
-
-
-def scores(logits: np.ndarray, labels: list[int], n_classes: int) -> dict:
-    y = np.asarray(labels)
-    if len(y) == 0:
-        return {"n": 0}
-    top5 = np.argsort(-logits, axis=1)[:, :5]
-    pred = top5[:, 0]
-    return {"n": len(y), "top1": float((pred == y).mean()),
-            "top5": float((top5 == y[:, None]).any(axis=1).mean()),
-            # Over classes the test signer recorded or the model predicted: some MINDS signers
-            # lack a few signs, and an absent, never-predicted class is not an error.
-            "f1_macro": float(f1_score(y, pred, labels=sorted(set(y) | set(pred)),
-                                       average="macro", zero_division=0)),
-            "confusion": confusion_matrix(y, pred, labels=range(n_classes)).tolist()}
-
-
-def malta_scores(logits: np.ndarray, items: list[Item], labels: list[int], n_classes: int) -> dict:
-    """Overall and per sub-collection (ADR-0015: MALTA results are reported per collection)."""
-    res = {"all": scores(logits, labels, n_classes)}
-    colls = sorted({i.sample_id.split(":")[1] for i in items})
-    for c in colls:
-        idx = [k for k, i in enumerate(items) if i.sample_id.split(":")[1] == c]
-        s = scores(logits[idx], [labels[k] for k in idx], n_classes)
-        res[c] = {k: v for k, v in s.items() if k != "confusion"}
-    return res
 
 
 def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str], cfg: dict,
@@ -124,23 +89,6 @@ def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str
                "n_train": len(train_ds), "test": test, "malta": ood, "history": history}
     (out / "metrics.json").write_text(json.dumps(metrics, indent=1))
     return metrics
-
-
-def mean_std(values: list[float]) -> dict:
-    return {"mean": float(np.mean(values)), "std": float(np.std(values)), "n": len(values)}
-
-
-def summarize(results: list[dict]) -> dict:
-    keys = ("top1", "top5", "f1_macro")
-    summary = {"folds": len(results),
-               "test": {k: mean_std([r["test"][k] for r in results]) for k in keys}}
-    if results and results[0]["malta"]:
-        colls = [c for c in results[0]["malta"] if c != "all"]
-        summary["malta"] = {k: mean_std([r["malta"]["all"][k] for r in results]) for k in keys}
-        summary["malta_by_collection"] = {
-            c: {"n": results[0]["malta"][c]["n"],
-                "top1": mean_std([r["malta"][c]["top1"] for r in results])} for c in colls}
-    return summary
 
 
 def main() -> int:

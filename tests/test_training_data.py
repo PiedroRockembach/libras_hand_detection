@@ -107,7 +107,7 @@ def test_models_give_logits_and_imprinting_classifies_by_prototype():
 
 
 def test_f1_ignores_classes_the_test_signer_never_recorded():
-    from libras.train.__main__ import scores
+    from libras.train.evaluate import scores
 
     logits = np.eye(3)[[0, 1, 1]]  # class 2 absent from the test set and never predicted
     s = scores(logits, [0, 1, 1], n_classes=3)
