@@ -31,3 +31,4 @@
 | [0013](decisoes/0013-vocabulario-alvo-signbank.md) | Vocabulário-alvo baseado no Signbank da Libras (UFSC) | Aceita |
 | [0014](decisoes/0014-plano-de-treinamento-e-melhoria-continua.md) | Plano de treinamento: sinais isolados, sequências de sinais e melhoria contínua | Aceita |
 | [0015](decisoes/0015-extracao-com-recorte-guiado-pela-pose.md) | Extração de landmarks com recorte guiado pela pose (`mp_v2`) | Aceita |
+| [0016](decisoes/0016-modelo-da-demo-v0-e-teste-de-webcam.md) | Modelo da demo v0, corte automático de sinais e teste de webcam | Proposta |
