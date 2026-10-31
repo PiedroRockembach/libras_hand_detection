@@ -2,12 +2,18 @@
 
     python -m libras.train --config configs/experiments/a1_gru_minds.yaml
     python -m libras.train --config ... --folds 0 1 --epochs 3     # quick check
+    python -m libras.train --config ... --final --stop-epoch 24     # demo model, all signers
 
 Each fold trains from scratch on 10 signers, picks the epoch by accuracy on a separate
 validation signer, and is tested on the held-out signer and on the MALTA look-alikes
 (out of domain). Everything goes to LIBRAS_DATA_ROOT/experiments/<name>/<run>/:
 config.yaml (as run), meta.json (commit, seed, versions), splits.json, fold_XX/{metrics.json,
 model.pt} and summary.json (mean +- std over folds). Numbers are only reported from there.
+
+--final trains one model on every signer (no validation or test signer) for the demo. With no
+validation signer to pick an epoch, it stops after --stop-epoch (0-based; e.g. the median best
+epoch of the LOSO run), keeping the same learning-rate schedule as the folds. It goes to
+experiments/<name>/final-<run>/ and has no metrics: its accuracy is the LOSO estimate.
 """
 
 from __future__ import annotations
@@ -41,18 +47,9 @@ def seed_everything(seed: int) -> None:
     torch.backends.cudnn.benchmark = False
 
 
-def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str], cfg: dict,
-             device: str, out: Path, progress: Progress) -> dict:
-    seed = cfg["seed"] * 1000 + fold["fold"]
-    seed_everything(seed)
-    by = {k: [i for i in items if i.signer in fold[k] and (k == "train" or not i.train_only)]
-          for k in ("train", "val", "test")}
-    fc, tc = cfg["features"], cfg["train"]
-    train_ds = SignDataset(by["train"], classes, fc, cfg["augment"], seed)
-    val_ds, test_ds = (SignDataset(by[k], classes, fc) for k in ("val", "test"))
-    malta_ds = SignDataset(malta, classes, fc)
-
-    model = build_model(cfg["model"], n_features(fc), len(classes)).to(device)
+def fit(model, train_ds: SignDataset, tc: dict, device: str, seed: int, after_epoch) -> None:
+    """The training loop shared by LOSO folds and the final model: AdamW with a one-cycle
+    schedule over ``tc["epochs"]``. ``after_epoch(epoch, mean loss)`` returns True to stop."""
     opt = torch.optim.AdamW(model.parameters(), lr=tc["lr"], weight_decay=tc["weight_decay"])
     sched = torch.optim.lr_scheduler.OneCycleLR(
         opt, max_lr=tc["lr"], total_steps=tc["epochs"] * -(-len(train_ds) // tc["batch_size"]),
@@ -60,7 +57,6 @@ def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str
     gen = torch.Generator().manual_seed(seed)
     loader = torch.utils.data.DataLoader(train_ds, batch_size=tc["batch_size"], shuffle=True,
                                          generator=gen, drop_last=False)
-    best, history = (-1.0, -1), []
     for epoch in range(tc["epochs"]):
         model.train()
         train_ds.set_epoch(epoch)
@@ -74,12 +70,35 @@ def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str
             opt.step()
             sched.step()
             total, n = total + loss.item() * len(y), n + len(y)
+        if after_epoch(epoch, total / n):
+            return
+
+
+def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str], cfg: dict,
+             device: str, out: Path, progress: Progress) -> dict:
+    seed = cfg["seed"] * 1000 + fold["fold"]
+    seed_everything(seed)
+    by = {k: [i for i in items if i.signer in fold[k] and (k == "train" or not i.train_only)]
+          for k in ("train", "val", "test")}
+    fc, tc = cfg["features"], cfg["train"]
+    train_ds = SignDataset(by["train"], classes, fc, cfg["augment"], seed)
+    val_ds, test_ds = (SignDataset(by[k], classes, fc) for k in ("val", "test"))
+    malta_ds = SignDataset(malta, classes, fc)
+
+    model = build_model(cfg["model"], n_features(fc), len(classes)).to(device)
+    best, history = (-1.0, -1), []
+
+    def after_epoch(epoch: int, loss: float) -> bool:
+        nonlocal best
         val = scores(predict(model, val_ds, device, tc["batch_size"]), val_ds.labels, len(classes))
-        history.append({"epoch": epoch, "loss": total / n, "val_top1": val["top1"]})
+        history.append({"epoch": epoch, "loss": loss, "val_top1": val["top1"]})
         if val["top1"] > best[0]:
             best = (val["top1"], epoch)
             torch.save(model.state_dict(), out / "model.pt")
         progress.advance()
+        return False
+
+    fit(model, train_ds, tc, device, seed, after_epoch)
 
     model.load_state_dict(torch.load(out / "model.pt", map_location=device))
     test = scores(predict(model, test_ds, device, tc["batch_size"]), test_ds.labels, len(classes))
@@ -92,6 +111,27 @@ def run_fold(fold: dict, items: list[Item], malta: list[Item], classes: list[str
     return metrics
 
 
+def train_final(items: list[Item], classes: list[str], cfg: dict, device: str, out: Path,
+                stop_epoch: int) -> None:
+    seed = cfg["seed"] * 1000 + 999
+    seed_everything(seed)
+    train_ds = SignDataset(items, classes, cfg["features"], cfg["augment"], seed)
+    model = build_model(cfg["model"], n_features(cfg["features"]), len(classes)).to(device)
+    history = []
+    with Progress(f"train-{cfg['name']}-final", f"Modelo final {cfg['name']}", stop_epoch + 1,
+                  "épocas") as progress:
+        def after_epoch(epoch: int, loss: float) -> bool:
+            history.append({"epoch": epoch, "loss": loss})
+            progress.advance()
+            return epoch >= stop_epoch
+
+        fit(model, train_ds, cfg["train"], device, seed, after_epoch)
+    torch.save(model.state_dict(), out / "model.pt")
+    (out / "history.json").write_text(json.dumps(
+        {"seed": seed, "stop_epoch": stop_epoch, "n_train": len(train_ds), "history": history},
+        indent=1))
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--config", type=Path, required=True)
@@ -100,7 +140,11 @@ def main() -> int:
     p.add_argument("--epochs", type=int, help="override train.epochs (quick checks)")
     p.add_argument("--device", default="auto")
     p.add_argument("--workers", type=int, default=8, help="processes loading landmarks")
+    p.add_argument("--final", action="store_true", help="one model on all signers (demo)")
+    p.add_argument("--stop-epoch", type=int, help="with --final: last epoch (0-based)")
     args = p.parse_args()
+    if args.final and args.stop_epoch is None:
+        p.error("--final needs --stop-epoch")
     if not args.data_root:
         p.error("set --data-root or LIBRAS_DATA_ROOT")
     root = args.data_root.resolve()
@@ -117,16 +161,24 @@ def main() -> int:
 
     git = git_state()
     run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ") + f"-{(git['commit'] or 'nogit')[:7]}"
-    run_dir = root / "experiments" / cfg["name"] / run_id
+    run_dir = root / "experiments" / cfg["name"] / (f"final-{run_id}" if args.final else run_id)
     run_dir.mkdir(parents=True)
     (run_dir / "config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True))
     (run_dir / "meta.json").write_text(json.dumps({
         "command": sys.argv, **git, "config_file": str(args.config), "device": device,
         "torch": torch.__version__, "numpy": np.__version__, "classes": classes,
-        "n_samples": len(items), "n_malta": len(malta), "folds_run": [f["fold"] for f in folds],
+        "n_samples": len(items), "n_malta": len(malta),
+        "folds_run": [] if args.final else [f["fold"] for f in folds],
+        "final": args.final, "stop_epoch": args.stop_epoch,
         "n_parameters": sum(t.numel() for t in build_model(
             cfg["model"], n_features(cfg["features"]), len(classes)).parameters()),
     }, indent=1, ensure_ascii=False))
+    if args.final:
+        print(f"{len(items)} samples, {len(classes)} classes, final model on {device}, stop "
+              f"after epoch {args.stop_epoch} -> {run_dir}", flush=True)
+        train_final(items, classes, cfg, device, run_dir, args.stop_epoch)
+        print(f"model: {run_dir / 'model.pt'}")
+        return 0
     (run_dir / "splits.json").write_text(json.dumps(folds, indent=1))
     print(f"{len(items)} samples, {len(classes)} classes, {len(malta)} MALTA, "
           f"{len(folds)} folds on {device} -> {run_dir}", flush=True)

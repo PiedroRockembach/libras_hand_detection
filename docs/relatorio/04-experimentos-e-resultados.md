@@ -6,12 +6,12 @@ Cada experimento entra nesta tabela com link para a configuração e o identific
 |---|---|---|---|---|---|---|---|---|
 | `a0_stats_mlp_minds/20261030T175856Z-1b97ce9` | 2026-10-30 | MINDS Canon, LOSO 12 dobras | MLP sobre estatísticas temporais (531 mil parâmetros) | landmarks `mp_v2`, 64 quadros × 446 | 0,933 ± 0,052 | 0,920 ± 0,066 | [a0](../../configs/experiments/a0_stats_mlp_minds.yaml) | `1b97ce9` |
 | `a1_gru_minds/20261030T181123Z-1b97ce9` | 2026-10-30 | MINDS Canon, LOSO 12 dobras | GRU bidirecional 2 × 192 + cosseno (1,30 M parâmetros) | idem | 0,934 ± 0,044 | 0,919 ± 0,054 | [a1](../../configs/experiments/a1_gru_minds.yaml) | `1b97ce9` |
-
 | `a2_gru_mirror/20261030T193009Z-9d003ba` | 2026-10-30 | idem | a1 + espelhamento (p = 0,5) | idem | 0,941 ± 0,035 | 0,930 ± 0,043 | [a2](../../configs/experiments/a2_gru_mirror.yaml) | `9d003ba` |
 | `a3_gru_kinect/20261030T193032Z-9d003ba` | 2026-10-30 | idem; treino + vista Kinect | a1 | idem | 0,936 ± 0,069 | 0,920 ± 0,090 | [a3](../../configs/experiments/a3_gru_kinect.yaml) | `9d003ba` |
 | `a4_gru_noface/20261030T194650Z-9d003ba` | 2026-10-30 | idem | a1 | sem pontos do rosto | 0,955 ± 0,035 | 0,947 ± 0,044 | [a4](../../configs/experiments/a4_gru_noface.yaml) | `9d003ba` |
 | `a5_gru_strongaug/20261030T200050Z-9d003ba` | 2026-10-30 | idem | a1 + aumento mais forte | idem | 0,947 ± 0,037 | 0,933 ± 0,043 | [a5](../../configs/experiments/a5_gru_strongaug.yaml) | `9d003ba` |
 | `a6_gru_mirror_kinect/20261030T201549Z-3813419` | 2026-10-30 | idem; treino + vista Kinect | a1 + espelhamento | idem | **0,963 ± 0,025** | **0,958 ± 0,030** | [a6](../../configs/experiments/a6_gru_mirror_kinect.yaml) | `3813419` |
+
 Média ± desvio-padrão (populacional) entre as 12 dobras. Em cada dobra, o teste é um sinalizador e a época é escolhida pela acurácia num outro sinalizador de validação (ADR-0004). O F1-macro de cada dobra considera as classes presentes no teste ou previstas, porque os sinalizadores 03, 04 e 09 não têm alguns sinais.
 
 ## 4.1 Fase A: baseline de sinais isolados (MINDS)
