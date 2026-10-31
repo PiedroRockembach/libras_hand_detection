@@ -2,6 +2,8 @@
 
 **Começando agora?** Leia a [explicação guiada](explicacao_guiada.md): o projeto inteiro, do vídeo ao modelo, para quem está entrando na área.
 
+**Demo de webcam:** [demo.md](demo.md).
+
 | Pasta | Para quê | Quando atualizar |
 |---|---|---|
 | [relatorio/](relatorio/) | Relatório vivo, base do futuro artigo. Um arquivo por capítulo. | Ao fim de cada sessão que produza algo relatável |
