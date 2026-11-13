@@ -14,6 +14,11 @@
   "asset": "demo-v0-a6_gru_mirror_kinect.tar.gz"
  },
  "attribution": "Trained on MINDS-Libras (Rezende et al.), CC BY 4.0: https://zenodo.org/records/2667329 and https://zenodo.org/record/4322983",
- "sha256": null,
- "files_sha256": null
+ "sha256": "b82db5a6f8e638cccc45bf9db84809002d50ee131892853d21e47976f5089c05",
+ "files_sha256": {
+  "config.yaml": "6365890a6aa20ec1bb4bf36d5bc1243ae2b510477070e0467a659e64a7769f4d",
+  "history.json": "400436e81f4e74c64fbdb969d65f114b2c6c85a633c9a923eb1e2750329adbc0",
+  "meta.json": "4265f8fa15ebc92bd179b38db35dd2c320d3a32f9f0c820147439cd6c49184cd",
+  "model.pt": "a3172b21423d8178c937dbb73cc309afc0ce64c5a1566c6c4c97b66f4f38601b"
+ }
 }
