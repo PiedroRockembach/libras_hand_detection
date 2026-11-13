@@ -32,3 +32,5 @@
 | [0014](decisoes/0014-plano-de-treinamento-e-melhoria-continua.md) | Plano de treinamento: sinais isolados, sequências de sinais e melhoria contínua | Aceita |
 | [0015](decisoes/0015-extracao-com-recorte-guiado-pela-pose.md) | Extração de landmarks com recorte guiado pela pose (`mp_v2`) | Aceita |
 | [0016](decisoes/0016-modelo-da-demo-v0-e-teste-de-webcam.md) | Modelo da demo v0, corte automático de sinais e teste de webcam | Proposta |
+| [0017](decisoes/0017-coleta-do-canal-incluir-tecnologia.md) | Coleta dos vídeos do canal Incluir Tecnologia (YouTube) | Proposta |
+| [0018](decisoes/0018-distribuicao-do-modelo-da-demo.md) | Distribuição do modelo da demo por GitHub Release | Proposta |

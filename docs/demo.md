@@ -14,18 +14,38 @@ Teclas: **espaço** marca o início e o fim de um sinal à mão; **a** liga e de
 
 ## Requisitos (rodar fora do container)
 
-A demo precisa da webcam e de uma janela, então roda direto no host (ADR-0007):
+A demo precisa da webcam e de uma janela, então roda direto no host (ADR-0007). O modelo treinado não está no git: ele é baixado da GitHub Release `demo-v0` por `scripts/demo_model.py fetch`, que confere os SHA-256 fixados em `configs/demo/v0.json` (ADR-0018).
+
+**Windows (PowerShell), numa máquina nova:**
 
 ```
-sudo pacman -S uv                      # gerenciador de ambiente do projeto
-cd ~/Documentos/projetos/libras_hand_detection
+winget install astral-sh.uv            # gerenciador de ambiente do projeto (reabra o terminal depois)
+git clone -b develop https://github.com/PiedroRockembach/libras_hand_detection.git
+cd libras_hand_detection
 uv sync                                # cria .venv com Python 3.12 e as dependências do uv.lock
-export LIBRAS_DATA_ROOT=/mnt/hd1tb/libras-data
+$env:LIBRAS_DATA_ROOT = "C:\libras-data"
+uv run python -m libras.extract models --config configs/extraction/mp_v2.yaml
+uv run python scripts/demo_model.py fetch --config configs/demo/v0.json
 uv run python -m libras.demo live --run experiments/a6_gru_mirror_kinect/final-20261031T174312Z-770f082
 ```
 
-- A webcam precisa aparecer como `/dev/video0`. Se houver mais de uma câmera, use `--camera 1`.
+`$env:` vale só para a sessão do terminal. Para fixar a variável: `setx LIBRAS_DATA_ROOT C:\libras-data`.
+
+**Linux:**
+
+```
+sudo pacman -S uv                      # ou: curl -LsSf https://astral.sh/uv/install.sh | sh
+cd ~/Documentos/projetos/libras_hand_detection
+uv sync
+export LIBRAS_DATA_ROOT=/mnt/hd1tb/libras-data
+uv run python -m libras.extract models --config configs/extraction/mp_v2.yaml   # se ainda não tiver
+uv run python scripts/demo_model.py fetch --config configs/demo/v0.json         # se ainda não tiver
+uv run python -m libras.demo live --run experiments/a6_gru_mirror_kinect/final-20261031T174312Z-770f082
+```
+
+- No Linux, a webcam precisa aparecer como `/dev/video0`. Se houver mais de uma câmera, use `--camera 1` (vale também no Windows).
 - Os modelos do MediaPipe são lidos de `LIBRAS_DATA_ROOT/models/mediapipe/`, os mesmos da extração.
+- O `fetch` e o `extract models` não repetem o download quando os arquivos já estão lá, e os dois registram o evento em `PROVENANCE.jsonl`.
 - A inferência roda na CPU (`--device cpu`, o padrão), o que basta para o modelo de landmarks.
 
 Para testar sem webcam, em qualquer ambiente, inclusive no container, há o modo de vídeo:

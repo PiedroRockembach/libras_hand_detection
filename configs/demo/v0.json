@@ -1,0 +1,19 @@
+{
+ "name": "demo-v0",
+ "adr": "ADR-0018",
+ "run": "experiments/a6_gru_mirror_kinect/final-20261031T174312Z-770f082",
+ "files": [
+  "config.yaml",
+  "history.json",
+  "meta.json",
+  "model.pt"
+ ],
+ "release": {
+  "repo": "PiedroRockembach/libras_hand_detection",
+  "tag": "demo-v0",
+  "asset": "demo-v0-a6_gru_mirror_kinect.tar.gz"
+ },
+ "attribution": "Trained on MINDS-Libras (Rezende et al.), CC BY 4.0: https://zenodo.org/records/2667329 and https://zenodo.org/record/4322983",
+ "sha256": null,
+ "files_sha256": null
+}
